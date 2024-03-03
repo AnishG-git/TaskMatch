@@ -3,7 +3,6 @@ venv
 /backend/venv/
 /backend/db.sqlite3
 /backend/backend/__pycache__
-/backend
 
 /backend/*.log
 /backend/*.pot
