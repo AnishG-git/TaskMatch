@@ -3,12 +3,13 @@ venv
 /backend/venv/
 /backend/db.sqlite3
 /backend/backend/__pycache__
+/backend
 
 /backend/*.log
 /backend/*.pot
 /backend/*.pyc
 
-.vscode/* 
+.vscode/*
 !.vscode/settings.json 
 !.vscode/tasks.json 
 !.vscode/launch.json 
