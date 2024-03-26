@@ -52,7 +52,7 @@ REST_FRAMEWORK = {
 AUTH_USER_MODEL = 'api.CustomUser' # Uncomment when using custom user model
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",  # Adjust the allowed origin to match your React app
+    "http://localhost:5137",  # Adjust the allowed origin to match your React app
 ]
 
 MIDDLEWARE = [

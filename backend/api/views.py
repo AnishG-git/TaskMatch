@@ -3,7 +3,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import authenticate
-from .models import CustomUser, Customer, Contractor
+from .models import CustomUser, Customer, Contractor, ToDoList, Task
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 
@@ -50,6 +50,7 @@ def register(request):
                 phone_number=phone_number,
                 zip_code=zip
             )
+            ToDoList.objects.create(user=Customer.objects.get(email=email))
             return Response({"status": "Customer created successfully!"}, status=status.HTTP_201_CREATED)
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -62,8 +63,10 @@ def login(request):
     user = authenticate(username=email, password=password)
     if user is not None:
         token, created = Token.objects.get_or_create(user=user)
+        print(f'User: {email} logged in\nToken: {token.key}\n')
         return Response({"token": token.key}, status=status.HTTP_200_OK)
     else:
+        print(f'Invalid credentials for user: {email} or user does not exist\n')
         return Response({"error": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
     
 @api_view(['GET'])
@@ -71,3 +74,4 @@ def login(request):
 def logout(request):
     request.auth.delete()
     return Response({"status": "Logout successful!"}, status=status.HTTP_200_OK)
+

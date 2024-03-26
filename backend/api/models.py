@@ -7,11 +7,9 @@ class CustomUser(AbstractUser):
     USERNAME_FIELD = 'email'
     phone_number = models.CharField(max_length=15, unique=True, blank=False)
     zip_code = models.CharField(max_length=10, blank=False)
-    # is_customer = models.BooleanField(default=True, blank=False)
     REQUIRED_FIELDS = ['username',]
     
 class Customer(CustomUser):
-    # add to do list instance
     name = models.CharField(max_length=50, blank=False, default='name')
     def __str__(self):
         return f'Customer name: {self.first_name}\nCustomer email: {self.email}'
@@ -22,3 +20,18 @@ class Contractor(CustomUser):
     rating = models.DecimalField(max_digits=2, decimal_places=1, default=0.0)
     def __str__(self):
         return f'Contractor name: {self.company_name}\nContractor email: {self.email}'
+    
+class ToDoList(models.Model):
+    user = models.OneToOneField(Customer, on_delete=models.CASCADE)
+    def __str__(self):
+        return f'To Do List belonging to {self.user}'
+    
+class Task(models.Model):
+    to_do_list = models.ForeignKey(ToDoList, on_delete=models.CASCADE)
+    name = models.CharField(max_length=50, blank=False)
+    description = models.TextField()
+    date = models.DateField()
+    is_completed = models.BooleanField(default=False)
+    contractor = models.ForeignKey(Contractor, on_delete=models.CASCADE, null=True, blank=True)
+    def __str__(self):
+        return f'Task name: {self.name}'
