@@ -6,6 +6,10 @@ from django.contrib.auth import authenticate
 from .models import CustomUser, Customer, Contractor, ToDoList, Task
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
+from django.shortcuts import get_object_or_404
+from .serializers import TaskSerializer, ContractorSerializer
+from .helpers import get_distance, validate_zip
+import heapq
 
 # Create your views here.
 @api_view(['POST'])
@@ -18,6 +22,8 @@ def register(request):
     zip = data.get('zip_code')
     company_name = data.get('company_name')
     category = data.get('category')
+    if not validate_zip(zip):
+        return Response({"status": "Invalid zip code"}, status=status.HTTP_400_BAD_REQUEST)
     if (company_name and category):
         if Contractor.objects.filter(email=email).exists():
             return Response({"status": "user already exists, email is not unique"}, status=status.HTTP_409_CONFLICT)
@@ -75,3 +81,114 @@ def logout(request):
     request.auth.delete()
     return Response({"status": "Logout successful!"}, status=status.HTTP_200_OK)
 
+# API to create a task
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def create_task(request):
+    data = request.data
+    user = request.user
+    name = data.get('task_name')
+    description = data.get('description')
+    date = data.get('date')
+    try:
+        to_do_list = ToDoList.objects.get(user=user)
+        task = Task.objects.create(
+            name=name,
+            description=description,
+            date=date,
+            to_do_list=to_do_list
+        )
+        serializer = TaskSerializer(task)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    except Exception as e:
+        return Response({"status": e}, status=status.HTTP_409_CONFLICT)
+
+# API to delete a task    
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def delete_task(request):
+    data = request.data
+    task_id = data.get('task_id')
+    try:
+        task = Task.objects.get(id=task_id)
+        print(task)
+        serializer = TaskSerializer(task)
+        task.delete()
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    except Task.DoesNotExist:
+        return Response({"status": "incorrect task id, task not found"}, status=status.HTTP_404_NOT_FOUND)
+
+@api_view(['PATCH'])
+@permission_classes([IsAuthenticated])
+def update_task(request):
+    data = request.data
+    task_id = data.get('task_id')
+    task = Task.objects.get(id=task_id)
+    name = data.get('task_name')
+    description = data.get('description')
+    date = data.get('date')
+    is_complete = data.get('is_complete')
+    contractor_email = data.get('contractor_email')
+    update_fields = {key: value for key, value in data.items() if key in ['name', 'description', 'date', 'is_complete']}
+    if contractor_email:
+        try:
+            contractor = Contractor.objects.get(email=contractor_email)
+            task.contractor = contractor
+        except Contractor.DoesNotExist:
+            print(f'Contractor with email: {contractor_email} does not exist')
+    try:
+        task.save()
+        Task.objects.filter(id=task_id).update(**update_fields)
+        return Response({"status": f"task (id: {task_id}) updated"}, status=status.HTTP_200_OK)
+    except Exception as e:
+        return Response({"status": e}, status=status.HTTP_409_CONFLICT)
+
+# API to get all tasks
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_tasks(request):
+    user = request.user
+    to_do_list = ToDoList.objects.filter(user=user)
+    tasks = Task.objects.filter(to_do_list__in=to_do_list)
+    serializer = TaskSerializer(tasks, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+    
+
+# Search contractor API searches for contractor based on category and zip code
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def search_contractor(request):
+    data = request.data
+    user = request.user
+    category = data.get('category')
+    try:
+        distance = float(request.query_params.get('distance', None))
+    except ValueError:
+        return Response({"status": "Invalid distance"}, status=status.HTTP_400_BAD_REQUEST)
+    zip_code = user.zip_code
+    unsorted_contractors = Contractor.objects.filter(category=category)
+    contractors = []
+    zip2distance = {}
+    for contractor in unsorted_contractors:
+        print(user.email)
+        contractor_distance = get_distance(zip_code, contractor.zip_code)
+        if distance and contractor_distance <= distance:
+            heapq.heappush(contractors, (contractor_distance, contractor))
+            zip2distance[contractor.zip_code] = contractor_distance
+        elif not distance:
+            heapq.heappush(contractors, (contractor_distance, contractor))
+            zip2distance[contractor.zip_code] = contractor_distance
+    if distance:
+        sorted_contractors = [heapq.heappop(contractors)[1] for _ in range(len(contractors))]
+    else:
+        sorted_contractors = [heapq.heappop(contractors)[1] for _ in range(min(10, len(contractors)))]
+
+    serializer = ContractorSerializer(sorted_contractors, many=True)
+    sorted_contractors = serializer.data
+
+    for i in range(len(sorted_contractors)):
+        contractor = sorted_contractors[i]
+        contractor['distance'] = zip2distance[contractor['zip_code']]
+
+    return Response(sorted_contractors, status=status.HTTP_200_OK)

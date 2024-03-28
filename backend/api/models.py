@@ -12,14 +12,14 @@ class CustomUser(AbstractUser):
 class Customer(CustomUser):
     name = models.CharField(max_length=50, blank=False, default='name')
     def __str__(self):
-        return f'Customer name: {self.first_name}\nCustomer email: {self.email}'
+        return f'{self.email}'
     
 class Contractor(CustomUser):
     company_name = models.CharField(max_length=50, blank=False)
     category = models.CharField(max_length=50, blank=False)
     rating = models.DecimalField(max_digits=2, decimal_places=1, default=0.0)
     def __str__(self):
-        return f'Contractor name: {self.company_name}\nContractor email: {self.email}'
+        return f'{self.email}'
     
 class ToDoList(models.Model):
     user = models.OneToOneField(Customer, on_delete=models.CASCADE)
@@ -27,6 +27,7 @@ class ToDoList(models.Model):
         return f'To Do List belonging to {self.user}'
     
 class Task(models.Model):
+    id = models.AutoField(primary_key=True)
     to_do_list = models.ForeignKey(ToDoList, on_delete=models.CASCADE)
     name = models.CharField(max_length=50, blank=False)
     description = models.TextField()
