@@ -11,7 +11,7 @@ from .serializers import TaskSerializer, ContractorSerializer
 from .helpers import get_distance, validate_zip
 import heapq
 
-# Create your views here.
+# api to register as customer/contractor
 @api_view(['POST'])
 def register(request):
     data = request.data
@@ -60,7 +60,8 @@ def register(request):
             return Response({"status": "Customer created successfully!"}, status=status.HTTP_201_CREATED)
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        
+
+# api to login        
 @api_view(['POST'])
 def login(request):
     data = request.data
@@ -118,6 +119,7 @@ def delete_task(request):
     except Task.DoesNotExist:
         return Response({"status": "incorrect task id, task not found"}, status=status.HTTP_404_NOT_FOUND)
 
+# api to update task
 @api_view(['PATCH'])
 @permission_classes([IsAuthenticated])
 def update_task(request):
@@ -159,30 +161,30 @@ def get_tasks(request):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def search_contractor(request):
-    data = request.data
     user = request.user
-    category = data.get('category')
     try:
+        category = request.query_params.get('category', None)
         distance = float(request.query_params.get('distance', None))
     except ValueError:
-        return Response({"status": "Invalid distance"}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"status": "Invalid or missing parameter(s)"}, status=status.HTTP_400_BAD_REQUEST)
+    if distance < 0:
+        return Response({"status": "Distance cannot be negative"}, status=status.HTTP_400_BAD_REQUEST)
     zip_code = user.zip_code
     unsorted_contractors = Contractor.objects.filter(category=category)
     contractors = []
     zip2distance = {}
     for contractor in unsorted_contractors:
-        print(user.email)
         contractor_distance = get_distance(zip_code, contractor.zip_code)
         if distance and contractor_distance <= distance:
-            heapq.heappush(contractors, (contractor_distance, contractor))
+            heapq.heappush(contractors, (contractor_distance, contractor.id, contractor))
             zip2distance[contractor.zip_code] = contractor_distance
         elif not distance:
-            heapq.heappush(contractors, (contractor_distance, contractor))
+            heapq.heappush(contractors, (contractor_distance, contractor.id, contractor))
             zip2distance[contractor.zip_code] = contractor_distance
     if distance:
-        sorted_contractors = [heapq.heappop(contractors)[1] for _ in range(len(contractors))]
+        sorted_contractors = [heapq.heappop(contractors)[2] for _ in range(len(contractors))]
     else:
-        sorted_contractors = [heapq.heappop(contractors)[1] for _ in range(min(10, len(contractors)))]
+        sorted_contractors = [heapq.heappop(contractors)[2] for _ in range(min(10, len(contractors)))]
 
     serializer = ContractorSerializer(sorted_contractors, many=True)
     sorted_contractors = serializer.data
