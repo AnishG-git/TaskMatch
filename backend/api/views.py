@@ -84,7 +84,7 @@ def register(request):
 
 
 
-# Kris Abasto - Login        
+# Kris Arbasto - Login        
 @api_view(['POST'])
 def login(request):
     # uses get functions to get user input (email and password) from login fields
@@ -113,7 +113,7 @@ def login(request):
 
 
 
-# Kris Abasto - Logout    
+# Kris Arbasto - Logout    
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def logout(request):
