@@ -1,7 +1,9 @@
 from django.urls import path
 from .views import register, login, logout, create_task, get_tasks, update_task, delete_task, search_contractor
-# from .views import
 
+
+# Defining the URL patterns for the API
+# All endpoints will be prefixed with http://127.0.0.1:8000/api/
 urlpatterns = [
     path('register', register, name='register'),
     path('login', login, name='login'),
