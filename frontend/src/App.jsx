@@ -5,6 +5,7 @@ import Landing from "./Landing";
 import Landing2 from "./Landing2/Landing2";
 import CustomerSignUp from "./CustomerSignUp/CustomerSignUp";
 import ContractorSignUp from "./ContractorSignUp/ContractorSignUp";
+import HomePage from "./Homepage/Homepage";
 import { Link, Route } from "wouter";
 
 export default function App() {
@@ -13,6 +14,7 @@ export default function App() {
       <Route path="/" component={Landing2} />
       <Route path="/customer-signup" component={CustomerSignUp} />
       <Route path="/contractor-signup" component={ContractorSignUp} />
+      <Route path="/home" component={HomePage} />
     </>
   );
 }

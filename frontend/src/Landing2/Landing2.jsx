@@ -17,6 +17,10 @@ export default function Landing2() {
     setLocation("/contractor-signup");
   };
 
+  const go2Home = () => {
+    setLocation("/home");
+  };
+
   const handleLogin = async () => {
     
     if (email === "" || password === "") {
@@ -38,6 +42,7 @@ export default function Landing2() {
     }
     if (token) {
       setLoginStatus("Login successful");
+      go2Home();
       document.cookie = `token=${token}; path=/; httpOnly;`;
     }
   };
