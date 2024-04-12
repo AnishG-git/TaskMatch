@@ -2,19 +2,19 @@ import React, { useState } from "react";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import TaskRow from "./EditRow";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const HomePage = () => {
-  const [tasks, setTasks] = useState([
-    {
-      title: "Finish report",
-      description: "Finish report description",
-      start: "2024-04-09",
-      backgroundColor: "#378006",
-      contractor: "John Doe",
-    },
-    { title: "Attend meeting", start: "2024-04-10" },
-    { title: "Grocery shopping", start: "2024-04-11" },
-  ]);
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const { userInfo } = location.state || {};
+  const token = userInfo.token;
+  const [tasks, setTasks] = useState(userInfo.tasks.map(task => ({...task, title: task.name, start: task.date})));
+  
+  if (!token) {
+    navigate("/");
+  }
   const [modalInfo, setModalInfo] = useState({
     show: false,
     event: {},
@@ -49,6 +49,30 @@ const HomePage = () => {
     }
   }
 
+  const editTask = async () => {
+    const response = await fetch("/api/update-task", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Token ${token}`,
+      },
+      body: JSON.stringify(task),
+    });
+    const result = await response.json();
+    console.log(result);
+  };
+
+  function handleSaveTask() {
+    // save task on frontend
+    for (let i = 0; i < tasks.length; i++) {
+      if (tasks[i].id == modalInfo.event.id) {
+        tasks[i] = task;
+        setTasks(tasks);
+        break;
+      }
+    }
+  }
+
   return (
     <div
       style={{ display: "flex", flexDirection: "column", alignItems: "center" }}
@@ -80,7 +104,6 @@ const HomePage = () => {
               backdropFilter: "blur(4px)",
             }}
           >
-            
             <div
               style={{
                 backgroundColor: "#085c8c",
@@ -91,7 +114,7 @@ const HomePage = () => {
                 border: "2px solid white",
                 overflowY: "scroll",
                 scrollbarWidth: "thin",
-                psoition: "fixed"
+                psoition: "fixed",
               }}
             >
               <div
@@ -100,7 +123,7 @@ const HomePage = () => {
                   alignItems: "center",
                   justifyContent: "center",
                   borderRadius: "15px",
-                  backgroundColor: "#085c8c"
+                  backgroundColor: "#085c8c",
                 }}
               >
                 <button
@@ -119,10 +142,36 @@ const HomePage = () => {
                   {modalInfo.editing ? "SAVE" : "EDIT"}
                 </button>
               </div>
-              <TaskRow modalInfo={modalInfo} task={task} setTask={setTask} field="title" />
-              <TaskRow modalInfo={modalInfo} task={task} setTask={setTask} field="description" />
-              <TaskRow modalInfo={modalInfo} task={task} setTask={setTask} field="date" />
-              <TaskRow modalInfo={modalInfo} task={task} setTask={setTask} field="contractor" />
+              <TaskRow
+                modalInfo={modalInfo}
+                task={task}
+                setTask={setTask}
+                field="title"
+              />
+              <TaskRow
+                modalInfo={modalInfo}
+                task={task}
+                setTask={setTask}
+                field="description"
+              />
+              <TaskRow
+                modalInfo={modalInfo}
+                task={task}
+                setTask={setTask}
+                field="date"
+              />
+              <TaskRow
+                modalInfo={modalInfo}
+                task={task}
+                setTask={setTask}
+                field="category"
+              />
+              <TaskRow
+                modalInfo={modalInfo}
+                task={task}
+                setTask={setTask}
+                field="contractor"
+              />
             </div>
           </div>
         )}

@@ -6,15 +6,17 @@ import Landing2 from "./Landing2/Landing2";
 import CustomerSignUp from "./CustomerSignUp/CustomerSignUp";
 import ContractorSignUp from "./ContractorSignUp/ContractorSignUp";
 import HomePage from "./Homepage/Homepage";
-import { Link, Route } from "wouter";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
 export default function App() {
   return (
-    <>
-      <Route path="/" component={Landing2} />
-      <Route path="/customer-signup" component={CustomerSignUp} />
-      <Route path="/contractor-signup" component={ContractorSignUp} />
-      <Route path="/home" component={HomePage} />
-    </>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Landing2 />} />
+        <Route path="/customer-signup" element={<CustomerSignUp />} />
+        <Route path="/contractor-signup" element={<ContractorSignUp />} />
+        <Route path="/home" element={<HomePage />} />
+      </Routes>
+    </Router>
   );
 }

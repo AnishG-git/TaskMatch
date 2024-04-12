@@ -5,7 +5,7 @@ from .models import Task, Contractor
 class TaskSerializer(serializers.ModelSerializer):
     class Meta:
         model = Task
-        fields = ['id', 'name', 'description', 'date', 'is_completed', 'contractor']
+        fields = ['id', 'name', 'description', 'date', 'is_completed', 'contractor', 'category']
 
 # serializers to convert contractor to JSON
 class ContractorSerializer(serializers.ModelSerializer):

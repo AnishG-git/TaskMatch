@@ -103,7 +103,7 @@ def login(request):
         print(f'User: {email} logged in\nToken: {token.key}\n')
 
         # returns token
-        return Response({"token": token.key}, status=status.HTTP_200_OK)
+        return Response({"token": token.key, "tasks": get_tasks_helper(user)}, status=status.HTTP_200_OK)
     
     else:
         # if user input does not match / invalid ; output error message
@@ -135,24 +135,23 @@ def create_task(request):
     name = data.get('task_name')
     description = data.get('description')
     date = data.get('date')
+    category = data.get('category')
     
     try:
         # Check if user has a ToDoList
         to_do_list = ToDoList.objects.get(user=user)
 
         # if they do exception will not be thrown, so a task is created
-        task = Task.objects.create(
+        Task.objects.create(
             name=name,
             description=description,
             date=date,
-            to_do_list=to_do_list
+            to_do_list=to_do_list,
+            category=category
         )
 
-        # Serialize the task (see serializers.py)
-        serializer = TaskSerializer(task)
-
         # Return JSON of serialized task object
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(get_tasks_helper(request.user), status=status.HTTP_201_CREATED)
     
     except Exception as e:
         return Response({"status": e}, status=status.HTTP_409_CONFLICT)
@@ -172,14 +171,11 @@ def delete_task(request):
         # Get the task with the specified id
         task = Task.objects.get(id=task_id)
 
-        # Serialize the task (see serializers.py)
-        serializer = TaskSerializer(task)
-
         # Delete the task
         task.delete()
 
         # Return JSON of serialized task object
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(get_tasks_helper(request.user), status=status.HTTP_200_OK)
     
     except Task.DoesNotExist:
         # if task with specified id does not exist, exception thrown
@@ -233,14 +229,19 @@ def update_task(request):
         Task.objects.filter(id=task_id).update(**update_fields)
 
         # Return success message
-        return Response({"status": f"task (id: {task_id}) updated"}, status=status.HTTP_200_OK)
+        
+        return Response(get_tasks_helper(request.user), status=status.HTTP_200_OK)
     
     except Exception as e:
         # Return error message if any exception occurs while updating task
         return Response({"status": e}, status=status.HTTP_409_CONFLICT)
 
 
-
+def get_tasks_helper(user):
+    to_do_list = ToDoList.objects.filter(user=user)
+    tasks = Task.objects.filter(to_do_list__in=to_do_list)
+    serializer = TaskSerializer(tasks, many=True)
+    return serializer.data
 
 # See Pdrer - Get tasks
 @api_view(['GET'])

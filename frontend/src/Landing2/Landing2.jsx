@@ -1,24 +1,25 @@
 import { useState } from "react";
 import "./Landing2.css";
-import { useLocation } from "wouter";
+// import { useLocation } from "wouter";
+import { useNavigate } from "react-router-dom";
 import CustomerSignUp from "../CustomerSignUp/CustomerSignUp";
 
 export default function Landing2() {
-  const [location, setLocation] = useLocation();
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loginStatus, setLoginStatus] = useState("");
 
   const customerSignUp = () => {
-    setLocation("/customer-signup");
+    navigate("/customer-signup");
   };
 
   const contractorSignUp = () => {
-    setLocation("/contractor-signup");
+    navigate("/contractor-signup");
   };
 
-  const go2Home = () => {
-    setLocation("/home");
+  const go2Home = (userInfo) => {
+    navigate("/home", {state: {userInfo}});
   };
 
   const handleLogin = async () => {
@@ -42,8 +43,8 @@ export default function Landing2() {
     }
     if (token) {
       setLoginStatus("Login successful");
-      go2Home();
-      document.cookie = `token=${token}; path=/; httpOnly;`;
+      go2Home(result);
+      document.cookie = `token=${token}; path=/;`;
     }
   };
 

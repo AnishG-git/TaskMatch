@@ -40,6 +40,7 @@ class Task(models.Model):
     to_do_list = models.ForeignKey(ToDoList, on_delete=models.CASCADE)
     name = models.CharField(max_length=50, blank=False)
     description = models.TextField()
+    category = models.CharField(max_length=50, blank=False, default='Home')
     date = models.DateField()
     is_completed = models.BooleanField(default=False)
     contractor = models.ForeignKey(Contractor, on_delete=models.CASCADE, null=True, blank=True)

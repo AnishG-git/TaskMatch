@@ -19,6 +19,9 @@ const TaskRow = (props) => {
   } else if (field === "contractor") {
     placeholder = modalInfo.event.extendedProps.contractor;
     fieldTitle = "Contractor";
+  } else if (field === "category") {
+    placeholder = modalInfo.event.extendedProps.category;
+    fieldTitle = "Category";
   }
 
   function inputType() {
@@ -54,27 +57,53 @@ const TaskRow = (props) => {
     }
   }
 
+  function handleChange(e) {
+    props.setTask({ ...props.task, [field]: e.target.value });
+  }
+
   return (
     <div>
       <p style={{ fontWeight: "bold", marginBottom: "5px" }}>
         {displayTitle()}
       </p>
       {modalInfo.editing ? (
-        <input
-          style={{
-            width: "100%",
-            height: "40px",
-            fontSize: "15px",
-            borderRadius: "5px",
-            border: "1px solid white",
-            padding: "5px",
-            marginBottom: "20px",
-          }}
-          type={inputType()}
-          min={field === "contractor" ? 0 : ""}
-          defaultValue={placeholder}
-          onChange={() => setTask({ ...task, field: e.target.value })}
-        />
+        field === "category" ? (
+          <select
+            style={{
+              width: "100%",
+              height: "40px",
+              fontSize: "15px",
+              borderRadius: "5px",
+              border: "1px solid white",
+              padding: "5px",
+              marginBottom: "20px",
+            }}
+            id="category"
+            defaultValue={placeholder}
+            onChange={handleChange}
+          >
+            <option value="Work">Work</option>
+            <option value="Personal">Personal</option>
+            <option value="Other">Other</option>
+          </select>
+        ) : (
+          <input
+            style={{
+              width: "100%",
+              height: "40px",
+              fontSize: "15px",
+              borderRadius: "5px",
+              border: "1px solid white",
+              padding: "5px",
+              marginBottom: "20px",
+            }}
+            id={field}
+            type={inputType()}
+            min={field === "contractor" ? 0 : ""}
+            defaultValue={placeholder}
+            onChange={handleChange}
+          />
+        )
       ) : (
         <DisplayField />
       )}
