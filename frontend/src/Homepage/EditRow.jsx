@@ -2,26 +2,29 @@ import { useState } from "react";
 const TaskRow = (props) => {
   const modalInfo = props.modalInfo;
   const field = props.field;
+  const create = props.create;
   let placeholder = "";
   let fieldTitle = "";
   let isTitle = false;
 
-  if (field === "title") {
-    placeholder = modalInfo.event.title;
-    fieldTitle = "Title";
-    isTitle = true;
-  } else if (field === "description") {
-    placeholder = modalInfo.event.extendedProps.description;
-    fieldTitle = "Description";
-  } else if (field === "date") {
-    placeholder = modalInfo.event.startStr;
-    fieldTitle = "Due Date";
-  } else if (field === "contractor") {
-    placeholder = modalInfo.event.extendedProps.contractor;
-    fieldTitle = "Contractor";
-  } else if (field === "category") {
-    placeholder = modalInfo.event.extendedProps.category;
-    fieldTitle = "Category";
+  if (create === false) {
+    if (field === "title") {
+      placeholder = modalInfo.event.title;
+      fieldTitle = "Title";
+      isTitle = true;
+    } else if (field === "description") {
+      placeholder = modalInfo.event.extendedProps.description;
+      fieldTitle = "Description";
+    } else if (field === "date") {
+      placeholder = modalInfo.event.startStr;
+      fieldTitle = "Due Date";
+    } else if (field === "contractor") {
+      placeholder = modalInfo.event.extendedProps.contractor;
+      fieldTitle = "Contractor";
+    } else if (field === "category") {
+      placeholder = modalInfo.event.extendedProps.category;
+      fieldTitle = "Category";
+    }
   }
 
   function inputType() {
@@ -34,7 +37,7 @@ const TaskRow = (props) => {
   }
 
   function displayTitle() {
-    if ((!isTitle || modalInfo.editing) && field != "contractor") {
+    if (((!isTitle || modalInfo.editing) && field !== "contractor") || create) {
       return fieldTitle;
     } else if (
       field === "contractor" &&
@@ -66,7 +69,7 @@ const TaskRow = (props) => {
       <p style={{ fontWeight: "bold", marginBottom: "5px" }}>
         {displayTitle()}
       </p>
-      {modalInfo.editing ? (
+      {modalInfo.editing || create ? (
         field === "category" ? (
           <select
             style={{

@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
+import interactionPlugin from "@fullcalendar/interaction";
 import TaskRow from "./EditRow";
 import { useNavigate, useLocation } from "react-router-dom";
+import Modal from "./Modal";
 
 const HomePage = () => {
   const location = useLocation();
@@ -10,8 +12,14 @@ const HomePage = () => {
 
   const { userInfo } = location.state || {};
   const token = userInfo.token;
-  const [tasks, setTasks] = useState(userInfo.tasks.map(task => ({...task, title: task.name, start: task.date})));
-  
+  const [tasks, setTasks] = useState(
+    userInfo.tasks.map((task) => ({
+      ...task,
+      title: task.name,
+      start: task.date,
+    }))
+  );
+
   if (!token) {
     navigate("/");
   }
@@ -21,37 +29,50 @@ const HomePage = () => {
     editing: false,
   });
 
+  const [showAddTask, setShowAddTask] = useState(false);
+
   const [task, setTask] = useState({});
 
-  function handleBackClick() {
-    console.log(task);
-    if (modalInfo.editing) {
+  const handleBackClick = (e) => {
+    // hide create modal
+    if (e.target.value === "true") {
+      setShowAddTask(false);
+    // turn off edit mode
+    } else if (modalInfo.editing) {
       setModalInfo({ show: true, event: modalInfo.event, editing: false });
+    // hide edit modal
     } else {
       setModalInfo({ show: false, event: {}, editing: false });
     }
-  }
+  };
 
+  // show modal when event is clicked
   function handleEventClick(arg) {
     setModalInfo({ show: true, event: arg.event });
   }
 
-  function handleEditClick() {
-    if (modalInfo.editing) {
-      // save changes
-      console.log("saving changes");
+  const handleEditClick = async (e) => {
+    if (e.target.value === "true") {
+      // call create task api
+      console.log("creating task");
     } else {
-      setModalInfo({
-        show: true,
-        event: modalInfo.event,
-        editing: !modalInfo.editing,
-      });
+      if (modalInfo.editing) {
+        // call update task api
+        console.log("saving changes");
+      } else {
+        // turn on edit mode
+        setModalInfo({
+          show: true,
+          event: modalInfo.event,
+          editing: !modalInfo.editing,
+        });
+      }
     }
-  }
+  };
 
   const editTask = async () => {
     const response = await fetch("/api/update-task", {
-      method: "GET",
+      method: "PATCH",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Token ${token}`,
@@ -73,6 +94,13 @@ const HomePage = () => {
     }
   }
 
+  function handleDateSelect(selectInfo) {
+    setShowAddTask(true);
+    let calendarApi = selectInfo.view.calendar;
+    calendarApi.unselect(); // clear date selection
+    console.log(selectInfo);
+  }
+
   return (
     <div
       style={{ display: "flex", flexDirection: "column", alignItems: "center" }}
@@ -88,95 +116,28 @@ const HomePage = () => {
         <h1>Your Tasks</h1>
       </div>
       <div style={{ width: "75vw" }}>
+        {showAddTask && (
+          <Modal
+            modalInfo={modalInfo}
+            task={task}
+            setTask={setTask}
+            handleBackClick={handleBackClick}
+            handleEditClick={handleEditClick}
+            create={true}
+          />
+        )}
         {modalInfo.show && (
-          <div
-            style={{
-              position: "fixed",
-              top: 0,
-              left: 0,
-              width: "100%",
-              height: "100%",
-              backgroundColor: "rgba(0,0,0,0.7)",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              zIndex: 2,
-              backdropFilter: "blur(4px)",
-            }}
-          >
-            <div
-              style={{
-                backgroundColor: "#085c8c",
-                padding: "20px",
-                height: "60%",
-                width: "60%",
-                borderRadius: "15px",
-                border: "2px solid white",
-                overflowY: "scroll",
-                scrollbarWidth: "thin",
-                psoition: "fixed",
-              }}
-            >
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  borderRadius: "15px",
-                  backgroundColor: "#085c8c",
-                }}
-              >
-                <button
-                  onClick={handleBackClick}
-                  className="back-btn"
-                  style={{ position: "absolute", top: "15%", left: "20%" }}
-                >
-                  {modalInfo.editing ? "CANCEL" : "BACK"}
-                </button>
-                <h1 style={{ color: "white" }}>{modalInfo.event.title}</h1>
-                <button
-                  onClick={handleEditClick}
-                  className="back-btn"
-                  style={{ position: "absolute", top: "15%", right: "20%" }}
-                >
-                  {modalInfo.editing ? "SAVE" : "EDIT"}
-                </button>
-              </div>
-              <TaskRow
-                modalInfo={modalInfo}
-                task={task}
-                setTask={setTask}
-                field="title"
-              />
-              <TaskRow
-                modalInfo={modalInfo}
-                task={task}
-                setTask={setTask}
-                field="description"
-              />
-              <TaskRow
-                modalInfo={modalInfo}
-                task={task}
-                setTask={setTask}
-                field="date"
-              />
-              <TaskRow
-                modalInfo={modalInfo}
-                task={task}
-                setTask={setTask}
-                field="category"
-              />
-              <TaskRow
-                modalInfo={modalInfo}
-                task={task}
-                setTask={setTask}
-                field="contractor"
-              />
-            </div>
-          </div>
+          <Modal
+            modalInfo={modalInfo}
+            task={task}
+            setTask={setTask}
+            handleBackClick={handleBackClick}
+            handleEditClick={handleEditClick}
+            create={false}
+          />
         )}
         <FullCalendar
-          plugins={[dayGridPlugin]}
+          plugins={[dayGridPlugin, interactionPlugin]}
           initialView="dayGridMonth"
           headerToolbar={{
             left: "title",
@@ -186,6 +147,8 @@ const HomePage = () => {
           eventColor="#378006"
           eventTextColor="#fff"
           aspectRatio={2}
+          selectable={true}
+          dateClick={handleDateSelect}
           eventClick={handleEventClick}
         />
       </div>
