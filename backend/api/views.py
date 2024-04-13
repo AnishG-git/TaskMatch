@@ -136,6 +136,9 @@ def create_task(request):
     description = data.get('description')
     date = data.get('date')
     category = data.get('category')
+
+    if not name or not description or not date or not category:
+        return Response({"error": "Missing one of the required fields"}, status=status.HTTP_400_BAD_REQUEST)
     
     try:
         # Check if user has a ToDoList
@@ -205,9 +208,10 @@ def update_task(request):
     date = data.get('date')
     is_complete = data.get('is_complete')
     contractor_email = data.get('contractor_email')
+    category = data.get('category')
 
     # Getting update fields that were explicitly provided in request body
-    update_fields = {key: value for key, value in data.items() if key in ['name', 'description', 'date', 'is_complete']}
+    update_fields = {key: value for key, value in data.items() if key in ['name', 'description', 'date', 'is_complete', 'category']}
 
     # Checking if contractor email was provided
     if contractor_email:

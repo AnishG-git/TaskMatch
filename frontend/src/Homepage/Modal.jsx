@@ -1,8 +1,15 @@
 import TaskRow from "./EditRow";
 
 export default function Modal(props) {
-  const { modalInfo, task, setTask, handleBackClick, handleEditClick, create } =
-    props;
+  const {
+    modalInfo,
+    task,
+    setTask,
+    handleBackClick,
+    handleEditClick,
+    create,
+    createDate,
+  } = props;
   return (
     <div
       style={{
@@ -53,14 +60,14 @@ export default function Modal(props) {
           ) : (
             <h1 style={{ color: "white" }}>{modalInfo.event.title}</h1>
           )}
-        <button
+          <button
             value={create}
             onClick={handleEditClick}
             className="back-btn"
             style={{ position: "absolute", top: "15%", right: "20%" }}
-        >
-            {create ? "SAVE" : (modalInfo.editing ? "SAVE" : "EDIT")}
-        </button>
+          >
+            {create ? "SAVE" : modalInfo.editing ? "SAVE" : "EDIT"}
+          </button>
         </div>
         <TaskRow
           modalInfo={modalInfo}
@@ -68,6 +75,7 @@ export default function Modal(props) {
           setTask={setTask}
           field="title"
           create={create}
+          createDate={null}
         />
         <TaskRow
           modalInfo={modalInfo}
@@ -75,6 +83,7 @@ export default function Modal(props) {
           setTask={setTask}
           field="description"
           create={create}
+          createDate={null}
         />
         <TaskRow
           modalInfo={modalInfo}
@@ -82,6 +91,7 @@ export default function Modal(props) {
           setTask={setTask}
           field="date"
           create={create}
+          createDate={createDate}
         />
         <TaskRow
           modalInfo={modalInfo}
@@ -89,6 +99,7 @@ export default function Modal(props) {
           setTask={setTask}
           field="category"
           create={create}
+          createDate={null}
         />
         <TaskRow
           modalInfo={modalInfo}
@@ -96,6 +107,7 @@ export default function Modal(props) {
           setTask={setTask}
           field="contractor"
           create={create}
+          createDate={null}
         />
       </div>
     </div>

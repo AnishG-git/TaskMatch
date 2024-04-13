@@ -3,29 +3,30 @@ const TaskRow = (props) => {
   const modalInfo = props.modalInfo;
   const field = props.field;
   const create = props.create;
+  const createDate = props.createDate;
   let placeholder = "";
   let fieldTitle = "";
   let isTitle = false;
 
-  if (create === false) {
+  // if (create === false) {
     if (field === "title") {
-      placeholder = modalInfo.event.title;
+      (!create) ? placeholder = modalInfo.event.title : placeholder = "";
       fieldTitle = "Title";
-      isTitle = true;
+      (!create) ? isTitle = true: {};
     } else if (field === "description") {
-      placeholder = modalInfo.event.extendedProps.description;
+      (!create) ? placeholder = modalInfo.event.extendedProps.description : placeholder = "";
       fieldTitle = "Description";
     } else if (field === "date") {
-      placeholder = modalInfo.event.startStr;
+      (!create) ? placeholder = modalInfo.event.startStr : placeholder = "";
       fieldTitle = "Due Date";
-    } else if (field === "contractor") {
-      placeholder = modalInfo.event.extendedProps.contractor;
+        } else if (field === "contractor") {
+      (!create) ? placeholder = modalInfo.event.extendedProps.contractor : placeholder = "";
       fieldTitle = "Contractor";
-    } else if (field === "category") {
-      placeholder = modalInfo.event.extendedProps.category;
+        } else if (field === "category") {
+      (!create) ? placeholder = modalInfo.event.extendedProps.category : placeholder = "";
       fieldTitle = "Category";
-    }
-  }
+        }
+  // }
 
   function inputType() {
     if (field === "contractor") {
@@ -82,9 +83,10 @@ const TaskRow = (props) => {
               marginBottom: "20px",
             }}
             id="category"
-            defaultValue={placeholder}
+            defaultValue={(placeholder) ? placeholder : "none"}
             onChange={handleChange}
           >
+            <option value="none"></option>
             <option value="Work">Work</option>
             <option value="Personal">Personal</option>
             <option value="Other">Other</option>
@@ -103,7 +105,7 @@ const TaskRow = (props) => {
             id={field}
             type={inputType()}
             min={field === "contractor" ? 0 : ""}
-            defaultValue={placeholder}
+            defaultValue={(createDate) ? createDate : placeholder}
             onChange={handleChange}
           />
         )
