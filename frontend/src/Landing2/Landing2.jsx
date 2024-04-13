@@ -1,9 +1,11 @@
 import { useState } from "react";
-import "./Landing2.css";
+
 // import { useLocation } from "wouter";
 import { useNavigate } from "react-router-dom";
 import CustomerSignUp from "../CustomerSignUp/CustomerSignUp";
-
+import Navbarp from '../Navbarp';
+import "./Landing2.css";
+import "../MainPage/index.css"
 export default function Landing2() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
@@ -19,11 +21,11 @@ export default function Landing2() {
   };
 
   const go2Home = (userInfo) => {
-    navigate("/home", {state: {userInfo}});
+    navigate("/home", { state: { userInfo } });
   };
 
   const handleLogin = async () => {
-    
+
     if (email === "" || password === "") {
       setLoginStatus("Please fill in all fields");
       return;
@@ -49,17 +51,21 @@ export default function Landing2() {
   };
 
   return (
+
     <div className="container" id="landingPage">
+
+      <Navbarp />
+
       <h1>
         Welcome to <span>TaskMatch</span>
       </h1>
       <p>Your All-in-One Task Management Solution</p>
       <form>
         <div className="form-group">
-          <input type="email" placeholder="EMAIL" className="login-field" onChange={(e) => setEmail(e.target.value)}/>
+          <input type="email" placeholder="EMAIL" className="login-field" onChange={(e) => setEmail(e.target.value)} />
         </div>
         <div className="form-group">
-          <input type="password" placeholder="PASSWORD" className="login-field" onChange={(e) => setPassword(e.target.value)}/>
+          <input type="password" placeholder="PASSWORD" className="login-field" onChange={(e) => setPassword(e.target.value)} />
         </div>
       </form>
       <div className="buttons">

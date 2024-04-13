@@ -1,85 +1,94 @@
 .settings-container {
-    display: flex;
-    height: 100vh;
-  }
-  
-  .sidebar {
-    background-color: #1F2A46;
-    color: #fff;
-    padding: 20px;
-    width: 200px;
-  }
-  
-  .sidebar-item {
-    padding: 10px;
-    cursor: pointer;
-  }
-  
-  .sidebar-item.active {
-    background-color: #3E4C6E;
-  }
-  
-  .content {
-    flex: 1;
-    padding: 20px;
-  }
-  
-  .section-title {
-    font-size: 20px;
-    font-weight: bold;
-    margin-bottom: 20px;
-  }
-  
-  .profile-picture {
-    display: flex;
-    align-items: center;
-    margin-bottom: 20px;
-  }
-  
-  .profile-picture img {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    margin-right: 20px;
-  }
-  
-  .profile-picture button {
-    margin-left: auto;
-    background-color: #3E4C6E;
-    color: #fff;
-    border: none;
-    padding: 8px 16px;
-    cursor: pointer;
-  }
-  
-  .form-field {
-    margin-bottom: 20px;
-  }
-  
-  .form-field label {
-    display: block;
-    font-weight: bold;
-    margin-bottom: 5px;
-  }
-  
-  .form-field input,
-  .form-field textarea {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-  }
-  
-  .actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-  }
-  
-  .actions button {
-    background-color: #3E4C6E;
-    color: #fff;
-    border: none;
-    padding: 8px 16px;
-    cursor: pointer;
-  }
+  display: flex;
+  height: 100vh;
+}
+
+.sidebar {
+  background-color: #f0f2f5;
+  /* Soft gray background */
+  color: #333;
+  /* Darker text color */
+  padding: 20px;
+  width: 200px;
+}
+
+.sidebar-item {
+  padding: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  /* Smooth transition for hover effect */
+}
+
+.sidebar-item.active {
+  background-color: #e4e6eb;
+  /* Light gray background for active item */
+}
+
+.content {
+  flex: 1;
+  padding: 20px;
+}
+
+.section-title {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #333;
+  /* Darker text color */
+}
+
+.profile-picture {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.profile-picture img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  margin-right: 20px;
+}
+
+.profile-picture button {
+  margin-left: auto;
+  background-color: #3e4c6e;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  cursor: pointer;
+}
+
+.form-field {
+  margin-bottom: 20px;
+}
+
+.form-field label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #333;
+  /* Darker text color */
+}
+
+.form-field input,
+.form-field textarea {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.actions button {
+  background-color: #3e4c6e;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  cursor: pointer;
+}

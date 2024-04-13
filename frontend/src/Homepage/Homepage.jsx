@@ -5,6 +5,8 @@ import interactionPlugin from "@fullcalendar/interaction";
 import TaskRow from "./EditRow";
 import { useNavigate, useLocation } from "react-router-dom";
 import Modal from "./Modal";
+import Navbarp from '../Navbarpo';
+import "../MainPage/index.css"
 
 const HomePage = () => {
   const location = useLocation();
@@ -37,10 +39,10 @@ const HomePage = () => {
     // hide create modal
     if (e.target.value === "true") {
       setShowAddTask(false);
-    // turn off edit mode
+      // turn off edit mode
     } else if (modalInfo.editing) {
       setModalInfo({ show: true, event: modalInfo.event, editing: false });
-    // hide edit modal
+      // hide edit modal
     } else {
       setModalInfo({ show: false, event: {}, editing: false });
     }
@@ -102,17 +104,9 @@ const HomePage = () => {
   }
 
   return (
-    <div
-      style={{ display: "flex", flexDirection: "column", alignItems: "center" }}
-    >
-      <div
-        style={{
-          width: "100vw",
-          maxWidth: "100%",
-          display: "flex",
-          justifyContent: "center",
-        }}
-      >
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+      <Navbarp /> {/* Include the Navbarp component here */}
+      <div style={{ width: "100vw", maxWidth: "100%", display: "flex", justifyContent: "center" }}>
         <h1>Your Tasks</h1>
       </div>
       <div style={{ width: "75vw" }}>

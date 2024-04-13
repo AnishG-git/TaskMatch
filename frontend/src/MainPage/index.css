@@ -1,0 +1,63 @@
+body {
+    background-color: black
+        /* Adjusted to apply background color */
+}
+
+.mr-custom {
+    margin-right: 35px;
+}
+
+.image-container {
+    max-width: 60%;
+    /* Reduced to make the image smaller */
+    margin: auto;
+    /* Center the image container */
+}
+
+.custom-img {
+    width: 100%;
+    /* Make the image fill the container */
+    height: auto;
+    /* Keep the image's aspect ratio */
+    border-radius: 15px;
+    /* Optional: Adds rounded corners to the image */
+}
+
+.parg {
+
+    /*Home page paragraph*/
+    font-family: "Assistant", sans-serif;
+    font-optical-sizing: auto;
+    color: white;
+    font-style: normal;
+    font-size: 30px;
+    margin-left: 10%;
+    /* Added left margin */
+    margin-right: 10%;
+    /* Added right margin */
+    margin-bottom: 2rem;
+    /* Added bottom margin */
+
+}
+
+.gradient-custom-3 {
+    /* fallback for old browsers */
+    background: #84fab0;
+
+    /* Chrome 10-25, Safari 5.1-6 */
+    background: -webkit-linear-gradient(to right, rgba(132, 250, 176, 0.5), rgba(143, 211, 244, 0.5));
+
+    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    background: linear-gradient(to right, rgba(132, 250, 176, 0.5), rgba(143, 211, 244, 0.5))
+}
+
+.gradient-custom-4 {
+    /* fallback for old browsers */
+    background: #84fab0;
+
+    /* Chrome 10-25, Safari 5.1-6 */
+    background: -webkit-linear-gradient(to right, rgba(132, 250, 176, 1), rgba(143, 211, 244, 1));
+
+    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    background: linear-gradient(to right, rgba(132, 250, 176, 1), rgba(143, 211, 244, 1))
+}
