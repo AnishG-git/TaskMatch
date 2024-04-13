@@ -238,7 +238,7 @@ def update_task(request):
     
     except Exception as e:
         # Return error message if any exception occurs while updating task
-        return Response({"status": e}, status=status.HTTP_409_CONFLICT)
+        return Response({"error": e}, status=status.HTTP_409_CONFLICT)
 
 
 def get_tasks_helper(user):

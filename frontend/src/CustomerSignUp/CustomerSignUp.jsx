@@ -1,9 +1,9 @@
 import { useState } from "react";
 import "./CustomerSignUp.css";
-import { useLocation } from "wouter";
+import { useNavigate } from "react-router-dom";
 
 export default function CustomerSignUp() {
-  const [location, setLocation] = useLocation();
+  const navigate = useNavigate();
 
   const [userInfo, setUserInfo] = useState({
     name: "",
@@ -45,7 +45,7 @@ export default function CustomerSignUp() {
   };
 
   const back = () => {
-    setLocation("/");
+    navigate("/");
   };
   return (
     <div className="container" id="signUpForm">

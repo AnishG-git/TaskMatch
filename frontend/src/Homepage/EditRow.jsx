@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 const TaskRow = (props) => {
   const modalInfo = props.modalInfo;
   const field = props.field;
@@ -27,6 +27,12 @@ const TaskRow = (props) => {
       fieldTitle = "Category";
         }
   // }
+
+  useEffect(() => {
+    if (modalInfo.editing) {
+      props.setTask(prevTask => ({ ...prevTask, [field]: placeholder }));
+    }
+  }, [modalInfo.editing]);
 
   function inputType() {
     if (field === "contractor") {

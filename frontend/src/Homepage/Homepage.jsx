@@ -45,7 +45,7 @@ const HomePage = () => {
   const [task, setTask] = useState({});
 
   const handleBackClick = (e) => {
-    console.log(task);
+    console.log("on back click, task: " + JSON.stringify(task));
     // hide create modal
     if (e.target.value === "true") {
       setCreateTaskInfo({show: false, date: null});
@@ -66,11 +66,14 @@ const HomePage = () => {
   const handleEditClick = async (e) => {
     
     if (e.target.value === "true") {
+      
+      console.log("creating task, task: " + JSON.stringify(task));
       // call create task api
-      console.log("creating task");
       const result = await createTask();
+      // check for an error
       if (result.error) {
-        console.log(result.error);
+        // change to real error message
+        alert(result.error);
       } else {
         reformatTasks(result);
       }
@@ -78,10 +81,10 @@ const HomePage = () => {
     } else {
       if (modalInfo.editing) {
         // call update task api
-        console.log("saving changes");
+        console.log("updating task, task: " + JSON.stringify(task));
         const result = await updateTask();
         if (result.error) {
-          console.log(result.error);
+          alert(result.error);
         } else {
           reformatTasks(result);
         }
