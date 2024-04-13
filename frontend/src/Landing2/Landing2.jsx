@@ -77,14 +77,9 @@ export default function Landing2() {
         </button>
       </div>
       <p>{loginStatus}</p>
-      <div className="contractor-section">
-        <p className="contractor-text">Contractor?</p>
-        <div className="contractor-buttons">
-          <button className="btn contractor-btn" id="contractorSignUpBtn" onClick={contractorSignUp}>
-            SIGN UP
-          </button>
-        </div>
-      </div>
+
     </div>
+
+
   );
 }
