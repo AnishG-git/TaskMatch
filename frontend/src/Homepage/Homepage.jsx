@@ -100,7 +100,7 @@ const HomePage = () => {
   };
 
   useEffect(() => {
-    if (modalInfo.show && modalInfo.editing) {
+    if (modalInfo.show) {
       setModalInfo({ show: false, event: {}, editing: false });
     } else if (createTaskInfo.show) {
       setCreateTaskInfo({show: false, date: null});
@@ -167,6 +167,38 @@ const HomePage = () => {
     calendarApi.unselect(); // clear date selection
   }
 
+  const handleDeleteClick = async () => {
+    // alert for confirmation
+    const confirm = window.confirm("Are you sure you want to delete this task?");
+    if (confirm) {
+      // call delete task api
+      const result = await handleDelete();
+      if (result.error) {
+        alert(result.error);
+      } else {
+        reformatTasks(result);
+      }
+    }
+  };
+
+  const handleDelete = async () => {
+    const response = await fetch("/api/delete-task", {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Token ${token}`,
+      },
+      body: JSON.stringify({
+        "task_id": modalInfo.event.id,
+      }),
+    });
+    const result = await response.json();
+    console.log(result);
+    return result;
+  };
+
+
+
   return (
     <div
       style={{ display: "flex", flexDirection: "column", alignItems: "center" }}
@@ -189,6 +221,7 @@ const HomePage = () => {
             setTask={setTask}
             handleBackClick={handleBackClick}
             handleEditClick={handleEditClick}
+            handleDeleteClick={null}
             create={true}
             createDate={createTaskInfo.date}
           />
@@ -200,6 +233,7 @@ const HomePage = () => {
             setTask={setTask}
             handleBackClick={handleBackClick}
             handleEditClick={handleEditClick}
+            handleDeleteClick={handleDeleteClick}
             create={false}
             createDate={null}
           />

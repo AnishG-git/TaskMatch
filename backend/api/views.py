@@ -182,7 +182,7 @@ def delete_task(request):
     
     except Task.DoesNotExist:
         # if task with specified id does not exist, exception thrown
-        return Response({"status": "incorrect task id, task not found"}, status=status.HTTP_404_NOT_FOUND)
+        return Response({"error": "incorrect task id, task not found"}, status=status.HTTP_404_NOT_FOUND)
 
 
 

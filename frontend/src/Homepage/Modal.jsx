@@ -7,6 +7,7 @@ export default function Modal(props) {
     setTask,
     handleBackClick,
     handleEditClick,
+    handleDeleteClick,
     create,
     createDate,
   } = props;
@@ -68,6 +69,16 @@ export default function Modal(props) {
           >
             {create ? "SAVE" : modalInfo.editing ? "SAVE" : "EDIT"}
           </button>
+          {!create && (
+            <button
+            value={create}
+            onClick={handleDeleteClick}
+            className="back-btn"
+            style={{ position: "absolute", top: "15%", right: "24%", color: "red", borderColor: "red"}}
+          >
+            DELETE
+          </button>
+          )}
         </div>
         <TaskRow
           modalInfo={modalInfo}
