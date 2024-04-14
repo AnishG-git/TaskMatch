@@ -43,6 +43,7 @@ const TaskRow = (props) => {
     !create ? (defaultVal = modalInfo.event.startStr) : (defaultVal = "");
     fieldTitle = "Due Date";
   } else if (field === "contractor") {
+    
     fieldTitle = "Contractor";
   } else if (field === "category") {
     !create ? (defaultVal = extProps.category) : (defaultVal = "");
@@ -81,6 +82,7 @@ const TaskRow = (props) => {
   }
 
   function handleChange(e) {
+    console.log(e.target.value);
     props.setTask({ ...props.task, [field]: e.target.value });
   }
 
@@ -158,6 +160,10 @@ const TaskRow = (props) => {
           />
         ) : (
           <>
+            <p style={{ fontWeight: "500" }}>
+              category:{" "}
+              {!create ? extProps.contractor.category : selectedContractor.category}
+            </p>
             <p style={{ fontWeight: "500" }}>
               name:{" "}
               {!create

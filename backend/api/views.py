@@ -168,7 +168,10 @@ def create_task(request):
     category = data.get('category')
     contractor_email = data.get('contractor_email')
 
-    print(data)
+    # Print data for debugging
+    for key, value in data.items():
+        print(f'{key}: {value}\n')
+
     if not name or not description or not date or not category:
         return Response({"error": "Missing one of the required fields"}, status=status.HTTP_400_BAD_REQUEST)
     
@@ -189,8 +192,6 @@ def create_task(request):
             ) 
         else:
             # create task with contractor
-            print(contractor)
-            print()
             Task.objects.create (
                 name=name,
                 description=description,
@@ -222,7 +223,6 @@ def get_tasks_helper(user):
                 contractor = Contractor.objects.filter(id=task['contractor'])
                 contractor_serializer = ContractorSerializer(contractor, many=True)
                 task['contractor'] = contractor_serializer.data[0]
-                print(task['contractor'])
                 task['contractor']['distance'] = get_distance(user.zip_code, task['contractor']['zip_code'])
             else:
                 task['contractor'] = {
@@ -273,13 +273,14 @@ def update_task(request):
     # Extract data from the request body
     # For this function, only task_id is required
     data = request.data
+    print(data)
     task_id = data.get('task_id')
     task = Task.objects.get(id=task_id)
 
     # Check if task exists
     if not task:
         # Return error message if task does not exist
-        return Response({"status": "Task does not exist"}, status=status.HTTP_404_NOT_FOUND)
+        return Response({"error": "Task does not exist"}, status=status.HTTP_404_NOT_FOUND)
     
     # Other fields only need to be entered if they are to be updated
     name = data.get('task_name')
@@ -289,12 +290,18 @@ def update_task(request):
     contractor_email = data.get('contractor_email')
     category = data.get('category')
 
+    for key, value in data.items():
+        print(f'{key}: {value}\n')
     # Checking if contractor email was provided
+    # print(f'contractor email: {contractor_email}\n')
     if contractor_email:
         if contractor_email != "unlink":
             try:
                 # checking if contractor with provided email exists
                 contractor = Contractor.objects.get(email=contractor_email)
+                print(f'task category: {task.category}\ncontractor category: {contractor.category}\n')
+                if category != contractor.category:
+                    return Response({"error": "Contractor category does not match task category"}, status=status.HTTP_400_BAD_REQUEST)
 
                 # connect task and contractor
                 task.contractor = contractor
@@ -307,6 +314,9 @@ def update_task(request):
         elif contractor_email == "unlink":
             task.contractor = None
             task.save()
+    elif task.contractor:
+            if task.contractor.category != category:
+                return Response({"error": "Contractor category does not match task category"}, status=status.HTTP_400_BAD_REQUEST)
     try:
         # Getting update fields that were explicitly provided in request body
         update_fields = {key: value for key, value in data.items() if key in ['name', 'description', 'date', 'is_complete', 'category']}
@@ -331,9 +341,6 @@ def update_task(request):
 @permission_classes([IsAuthenticated])
 def get_tasks(request):
     user = request.user
-
-    
-
     # Return JSON of serialized tasks
     return Response(get_tasks_helper(user), status=status.HTTP_200_OK)
     

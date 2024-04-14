@@ -5,8 +5,8 @@ import interactionPlugin from "@fullcalendar/interaction";
 import TaskRow from "./EditRow";
 import { useNavigate, useLocation } from "react-router-dom";
 import Modal from "./Modal";
-import Navbarp from '../Navbarpo';
-import "../MainPage/index.css"
+import Navbarp from "../Navbarpo";
+import "../MainPage/index.css";
 
 const HomePage = () => {
   const location = useLocation();
@@ -19,9 +19,7 @@ const HomePage = () => {
     email: userInfo.email,
     zip: userInfo.zip_code,
     phone: userInfo.phone_number,
-
   });
-
 
   // tasks is an array of objects that contain the information for each task (title, start date, etc.)
   const [tasks, setTasks] = useState(
@@ -53,21 +51,27 @@ const HomePage = () => {
     editing: false,
   });
 
-  const [createTaskInfo, setCreateTaskInfo] = useState({show: false, date: null});
+  const [createTaskInfo, setCreateTaskInfo] = useState({
+    show: false,
+    date: null,
+  });
 
   // task is the task that is being edited (contains information that has not been saved yet)
   const [task, setTask] = useState({});
 
   const [radius, setRadius] = useState(10);
 
-  const [contractors, setContractors] = useState();
+  const [contractors, setContractors] = useState([]);
 
   const handleBackClick = (e) => {
-    console.log("on back click, modalInfo: " + JSON.stringify(modalInfo.event.extendedProps));
+    console.log(
+      "on back click, modalInfo: " +
+        JSON.stringify(modalInfo.event.extendedProps)
+    );
     // hide create modal
     if (e.target.value === "true") {
-      setCreateTaskInfo({show: false, date: null});
-    // turn off edit mode
+      setCreateTaskInfo({ show: false, date: null });
+      // turn off edit mode
     } else if (modalInfo.editing) {
       setModalInfo({ show: true, event: modalInfo.event, editing: false });
       // hide edit modal
@@ -82,9 +86,7 @@ const HomePage = () => {
   }
 
   const handleEditClick = async (e) => {
-    
     if (e.target.value === "true") {
-      
       console.log("creating task, task: " + JSON.stringify(task));
       // call create task api
       const result = await createTask();
@@ -95,11 +97,10 @@ const HomePage = () => {
       } else {
         reformatTasks(result);
       }
-      
     } else {
       if (modalInfo.editing) {
         // call update task api
-        console.log("updating task, task: " + JSON.stringify(task));
+        // console.log("updating task, task: " + JSON.stringify(task));
         const result = await updateTask();
         if (result.error) {
           alert(result.error);
@@ -118,13 +119,14 @@ const HomePage = () => {
   };
 
   useEffect(() => {
-    console.log(tasks);
+    // console.log(tasks);
     if (modalInfo.show) {
       setModalInfo({ show: false, event: {}, editing: false });
     } else if (createTaskInfo.show) {
-      setCreateTaskInfo({show: false, date: null});
+      setCreateTaskInfo({ show: false, date: null });
     } else {
-      setContractors(null);
+      console.log("setting contractors to empty");
+      setContractors([]);
     }
   }, [tasks]);
 
@@ -135,10 +137,12 @@ const HomePage = () => {
   }, [modalInfo.show, createTaskInfo.show]);
 
   const updateTask = async () => {
+    console.log(task.category);
     if (!task.category) {
       return { error: "Please fill in all fields" };
     }
-    const contractorArg = task.contractor.id === -1 ? "unlink" : task.contractor.email;
+    const contractorArg =
+      task.contractor.id === -1 ? "unlink" : task.contractor.email;
     const response = await fetch("/api/update-task", {
       method: "PATCH",
       headers: {
@@ -146,23 +150,26 @@ const HomePage = () => {
         Authorization: `Token ${token}`,
       },
       body: JSON.stringify({
-        "task_id": modalInfo.event.id,
-        "description": task.description,
-        "date": task.date,
-        "name": task.title,
-        "contractor_email": contractorArg,
+        task_id: modalInfo.event.id,
+        description: task.description,
+        date: task.date,
+        name: task.title,
+        contractor_email: contractorArg,
         // add contractor after search contractor api call implementation
-        "category": task.category,
-        "is_completed": task.is_completed,
+        category: task.category,
+        is_completed: task.is_completed,
       }),
     });
     const result = await response.json();
-    // console.log(result);
+    if (result.error) {
+      alert(result.error);
+      return;
+    }
     return result;
   };
 
   const createTask = async () => {
-    console.log("create task: " + JSON.stringify(task));
+    // console.log("create task: " + JSON.stringify(task));
     // save task on frontend
     const response = await fetch("/api/create-task", {
       method: "POST",
@@ -171,29 +178,31 @@ const HomePage = () => {
         Authorization: `Token ${token}`,
       },
       body: JSON.stringify({
-        "description": task.description,
-        "date": createTaskInfo.date,
-        "task_name": task.title,
-        "contractor_email": task.contractor.email,
+        description: task.description,
+        date: createTaskInfo.date,
+        task_name: task.title,
+        contractor_email: task.contractor.email,
         // add contractor after search contractor api call implementation
-        "category": task.category,
+        category: task.category,
       }),
     });
     const result = await response.json();
     console.log(result);
     return result;
-  }
+  };
 
   function handleDateSelect(selectInfo) {
     // console.log("from function: " + selectInfo.dateStr);
-    setCreateTaskInfo({show: true, date: selectInfo.dateStr});
+    setCreateTaskInfo({ show: true, date: selectInfo.dateStr });
     let calendarApi = selectInfo.view.calendar;
     calendarApi.unselect(); // clear date selection
   }
 
   const handleDeleteClick = async () => {
     // alert for confirmation
-    const confirm = window.confirm("Are you sure you want to delete this task?");
+    const confirm = window.confirm(
+      "Are you sure you want to delete this task?"
+    );
     if (confirm) {
       // call delete task api
       const result = await handleDelete();
@@ -213,7 +222,7 @@ const HomePage = () => {
         Authorization: `Token ${token}`,
       },
       body: JSON.stringify({
-        "task_id": modalInfo.event.id,
+        task_id: modalInfo.event.id,
       }),
     });
     const result = await response.json();
@@ -221,25 +230,40 @@ const HomePage = () => {
     return result;
   };
 
-  const searchContractor = async () => { 
+  const searchContractor = async () => {
     console.log("radius: " + radius);
-    const response = await fetch(("/api/search-contractors?category=" + task.category + "&distance=" + radius), {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Token ${token}`,
+    const response = await fetch(
+      "/api/search-contractors?category=" +
+        task.category +
+        "&distance=" +
+        radius,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Token ${token}`,
+        },
       }
-    });
+    );
     const result = await response.json();
     console.log(result);
     setContractors(result);
-  }
-
+  };
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-      <Navbarp userInfo={{token: token, tasks: tasks}}/> {/* Include the Navbarp component here */}
-      <div style={{ width: "100vw", maxWidth: "100%", display: "flex", justifyContent: "center" }}>
+    <div
+      style={{ display: "flex", flexDirection: "column", alignItems: "center" }}
+    >
+      <Navbarp userInfo={{ token: token, tasks: tasks }} />{" "}
+      {/* Include the Navbarp component here */}
+      <div
+        style={{
+          width: "100vw",
+          maxWidth: "100%",
+          display: "flex",
+          justifyContent: "center",
+        }}
+      >
         <h1>Your Tasks</h1>
       </div>
       <div style={{ width: "75vw" }}>
