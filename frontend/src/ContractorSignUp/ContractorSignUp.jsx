@@ -1,9 +1,10 @@
 import { useState } from "react";
 import "./ContractorSignUp.css";
 import { useLocation } from "wouter";
+import { useNavigate } from "react-router-dom";
 
 export default function ContractorSignUp() {
-  const [location, setLocation] = useLocation();
+  const navigate = useNavigate();
 
   const [userInfo, setUserInfo] = useState({
     name: "",
@@ -45,7 +46,7 @@ export default function ContractorSignUp() {
   };
 
   const back = () => {
-    setLocation("/");
+    navigate("/");
   };
   
   return (
