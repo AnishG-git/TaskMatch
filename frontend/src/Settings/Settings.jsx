@@ -1,13 +1,22 @@
 import React from 'react';
 import './Settings.css';
+import { useNavigate, useLocation } from 'react-router-dom';
+
+
 
 function SettingsPage() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { userInfo } = location.state || {};
+
+  function go2Home() {
+    navigate("/home", { state: { userInfo }});
+  }
+
   return (
     <div className="settings-container">
       <div className="sidebar">
-        <div className="sidebar-item">Home</div>
-        <div className="sidebar-item">Calendar</div>
-        <div className="sidebar-item">Your Activity</div>
+        <div className="sidebar-item" onClick={go2Home}>Calendar</div>
         <div className="sidebar-item active">Settings</div>
       </div>
       <div className="content">

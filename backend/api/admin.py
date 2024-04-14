@@ -8,7 +8,7 @@ class CustomerAdmin(UserAdmin):
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('email', 'phone_number', 'zip_code', 'password1', 'password2'),
+            'fields': ('email', 'phone_number', 'name', 'zip_code', 'password1', 'password2'),
             }
         ),
     )

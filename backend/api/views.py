@@ -91,7 +91,6 @@ def login(request):
     data = request.data
     email = data.get('email')
     password = data.get('password')
-    
     # Authenticating user
     user = authenticate(username=email, password=password)
     
@@ -102,8 +101,39 @@ def login(request):
 
         print(f'User: {email} logged in\nToken: {token.key}\n')
 
+        # check if user is a contractor
+        if hasattr(user, 'contractor'):
+            contractor = Contractor.objects.get(id=user.id)
+            tasks = Task.objects.filter(contractor=contractor)
+            tasks = TaskSerializer(tasks, many=True)
+            userInfo = {
+                "id": user.id,
+                "email": contractor.email,
+                "phone_number": contractor.phone_number,
+                "zip_code": contractor.zip_code,
+                "company_name": contractor.company_name,
+                "category": contractor.category,
+                "rating": contractor.rating,
+                "token": token.key,
+                "is_contractor": "true",
+                "tasks": tasks.data
+            }
+        else:
+            customer = Customer.objects.get(id=user.id)
+            userInfo = {
+                "id": user.id,
+                "email": user.email,
+                "name": customer.name,
+                "phone_number": user.phone_number,
+                "zip_code": user.zip_code,
+                "token": token.key,
+                "is_contractor": "false",
+                "tasks": get_tasks_helper(user)
+            }   
+
         # returns token
-        return Response({"token": token.key, "tasks": get_tasks_helper(user)}, status=status.HTTP_200_OK)
+        
+        return Response(userInfo, status=status.HTTP_200_OK)
     
     else:
         # if user input does not match / invalid ; output error message
@@ -136,30 +166,79 @@ def create_task(request):
     description = data.get('description')
     date = data.get('date')
     category = data.get('category')
+    contractor_email = data.get('contractor_email')
 
+    print(data)
     if not name or not description or not date or not category:
         return Response({"error": "Missing one of the required fields"}, status=status.HTTP_400_BAD_REQUEST)
     
+    print("received necessary fields\n")
     try:
         # Check if user has a ToDoList
         to_do_list = ToDoList.objects.get(user=user)
-
-        # if they do exception will not be thrown, so a task is created
-        Task.objects.create(
-            name=name,
-            description=description,
-            date=date,
-            to_do_list=to_do_list,
-            category=category
-        )
-
+        contractor = Contractor.objects.filter(email=contractor_email)
+        print(f"contractor exists: {contractor.exists()}\n")
+        if not contractor.exists():
+            # create task without contractor
+            Task.objects.create (
+                name=name,
+                description=description,
+                date=date,
+                to_do_list=to_do_list,
+                category=category
+            ) 
+        else:
+            # create task with contractor
+            print(contractor)
+            print()
+            Task.objects.create (
+                name=name,
+                description=description,
+                date=date,
+                to_do_list=to_do_list,
+                category=category,
+                contractor=contractor[0]
+            )
+        print("task created\n")
+        print("going to get tasks\n")
         # Return JSON of serialized task object
+        
         return Response(get_tasks_helper(request.user), status=status.HTTP_201_CREATED)
     
     except Exception as e:
-        return Response({"status": e}, status=status.HTTP_409_CONFLICT)
+        return Response({"error": str(e)}, status=status.HTTP_409_CONFLICT)
 
 
+def get_tasks_helper(user):
+    print("getting tasks\n")
+    try:
+        to_do_list = ToDoList.objects.filter(user=user)
+        tasks = Task.objects.filter(to_do_list__in=to_do_list)
+        serializer = TaskSerializer(tasks, many=True)
+        tasks_with_distances = serializer.data
+        print(tasks_with_distances)
+        for task in tasks_with_distances:
+            if task['contractor'] is not None:
+                contractor = Contractor.objects.filter(id=task['contractor'])
+                contractor_serializer = ContractorSerializer(contractor, many=True)
+                task['contractor'] = contractor_serializer.data[0]
+                print(task['contractor'])
+                task['contractor']['distance'] = get_distance(user.zip_code, task['contractor']['zip_code'])
+            else:
+                task['contractor'] = {
+                    "id": -1,
+                    "email": "",
+                    "phone_number": "",
+                    "zip_code": "",
+                    "company_name": "",
+                    "category": "",
+                    "rating": "",
+                    "distance": ""
+                }
+                
+        return tasks_with_distances
+    except Exception as e:
+        return {"error": str(e)}
 
 
 # Taha Wasiq - Delete a task 
@@ -210,25 +289,27 @@ def update_task(request):
     contractor_email = data.get('contractor_email')
     category = data.get('category')
 
-    # Getting update fields that were explicitly provided in request body
-    update_fields = {key: value for key, value in data.items() if key in ['name', 'description', 'date', 'is_complete', 'category']}
-
     # Checking if contractor email was provided
     if contractor_email:
-        try:
-            # checking if contractor with provided email exists
-            contractor = Contractor.objects.get(email=contractor_email)
+        if contractor_email != "unlink":
+            try:
+                # checking if contractor with provided email exists
+                contractor = Contractor.objects.get(email=contractor_email)
 
-            # connect task and contractor
-            task.contractor = contractor
+                # connect task and contractor
+                task.contractor = contractor
+                task.save()
 
-        except Contractor.DoesNotExist:
-            # only printing error message so that update will continue with other fields
-            print(f'Contractor with email: {contractor_email} does not exist')
+            except Contractor.DoesNotExist:
+                # only printing error message so that update will continue with other fields
+                print(f'Contractor with email: {contractor_email} does not exist')
+
+        elif contractor_email == "unlink":
+            task.contractor = None
+            task.save()
     try:
-        # Contractor email is valid here, so update task contractor
-        task.save()
-
+        # Getting update fields that were explicitly provided in request body
+        update_fields = {key: value for key, value in data.items() if key in ['name', 'description', 'date', 'is_complete', 'category']}
         # Update task with the other provided fields
         Task.objects.filter(id=task_id).update(**update_fields)
 
@@ -241,11 +322,9 @@ def update_task(request):
         return Response({"error": e}, status=status.HTTP_409_CONFLICT)
 
 
-def get_tasks_helper(user):
-    to_do_list = ToDoList.objects.filter(user=user)
-    tasks = Task.objects.filter(to_do_list__in=to_do_list)
-    serializer = TaskSerializer(tasks, many=True)
-    return serializer.data
+
+
+    
 
 # See Pdrer - Get tasks
 @api_view(['GET'])
@@ -253,17 +332,10 @@ def get_tasks_helper(user):
 def get_tasks(request):
     user = request.user
 
-    # Getting user's to do list
-    to_do_list = ToDoList.objects.filter(user=user)
-
-    # Getting all tasks in user's to do list
-    tasks = Task.objects.filter(to_do_list__in=to_do_list)
-
-    # Serialize the tasks with many=true for multiple tasks (see serializers.py)
-    serializer = TaskSerializer(tasks, many=True)
+    
 
     # Return JSON of serialized tasks
-    return Response(serializer.data, status=status.HTTP_200_OK)
+    return Response(get_tasks_helper(user), status=status.HTTP_200_OK)
     
 
 
@@ -280,12 +352,17 @@ def search_contractor(request):
         distance = float(request.query_params.get('distance', None))
     except ValueError:
         # Error handling if parameters are invalid/missing
-        return Response({"status": "Invalid or missing parameter(s)"}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"error": "Invalid or missing parameter(s)"}, status=status.HTTP_400_BAD_REQUEST)
     
     if distance < 0:
         # Error handling if distance is negative
-        return Response({"status": "Distance cannot be negative"}, status=status.HTTP_400_BAD_REQUEST)
-    
+        return Response({"error": "Distance cannot be negative"}, status=status.HTTP_400_BAD_REQUEST)
+    if distance == 0:
+        contractors = Contractor.objects.filter(zip_code=user.zip_code, category=category)
+        serializer = ContractorSerializer(contractors, many=True)
+        for contractor in serializer.data:
+            contractor['distance'] = 0
+        return Response(serializer.data, status=status.HTTP_200_OK)
     # user's zip code
     zip_code = user.zip_code
 

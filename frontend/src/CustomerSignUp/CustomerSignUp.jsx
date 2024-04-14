@@ -45,7 +45,7 @@ export default function CustomerSignUp() {
   };
 
   const back = () => {
-    navigate("/");
+    navigate("/Login");
   };
   return (
     <div className="container" id="signUpForm">

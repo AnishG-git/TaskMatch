@@ -34,9 +34,7 @@ const Navbarp = () => {
                                 Contractor
                             </a>
                             <ul className="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                                <li><Link className="dropdown-item" to="/contractor-signup">Login</Link></li>
                                 <li><Link className="dropdown-item" to="/contractor-signup">Sign Up</Link></li>
-                                <li><Link className="dropdown-item" to="/contractor/support">Support</Link></li>
                             </ul>
                         </li>
                     </ul>

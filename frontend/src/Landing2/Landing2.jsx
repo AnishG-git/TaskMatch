@@ -16,10 +16,6 @@ export default function Landing2() {
     navigate("/customer-signup");
   };
 
-  const contractorSignUp = () => {
-    navigate("/contractor-signup");
-  };
-
   const go2Home = (userInfo) => {
     navigate("/home", { state: { userInfo } });
   };
@@ -37,7 +33,7 @@ export default function Landing2() {
       },
       body: JSON.stringify({ email: email, password: password }),
     });
-    const result = await response.json();
+    let result = await response.json();
     const token = result.token;
     const error = result.error;
     if (error) {
@@ -45,8 +41,8 @@ export default function Landing2() {
     }
     if (token) {
       setLoginStatus("Login successful");
+      console.log(JSON.stringify(result));
       go2Home(result);
-      document.cookie = `token=${token}; path=/;`;
     }
   };
 

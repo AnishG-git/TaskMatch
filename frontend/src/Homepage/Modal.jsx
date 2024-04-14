@@ -10,6 +10,9 @@ export default function Modal(props) {
     handleDeleteClick,
     create,
     createDate,
+    setRadius,
+    contractors,
+    searchContractor
   } = props;
   return (
     <div
@@ -54,7 +57,7 @@ export default function Modal(props) {
             className="back-btn"
             style={{ position: "absolute", top: "15%", left: "20%" }}
           >
-            {modalInfo.editing ? "CANCEL" : "BACK"}
+            {modalInfo.editing ? "CANCEL" : "DONE"}
           </button>
           {create ? (
             <h1 style={{ color: "white" }}>Add Task</h1>
@@ -119,7 +122,11 @@ export default function Modal(props) {
           field="contractor"
           create={create}
           createDate={null}
+          setRadius={setRadius}
+          searchContractor={searchContractor}
+          contractors={contractors}
         />
+        
       </div>
     </div>
   );

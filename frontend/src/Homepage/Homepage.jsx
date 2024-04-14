@@ -14,7 +14,16 @@ const HomePage = () => {
 
   const { userInfo } = location.state || {};
   const token = userInfo.token;
+  const [user, setUser] = useState({
+    name: userInfo.name,
+    email: userInfo.email,
+    zip: userInfo.zip_code,
+    phone: userInfo.phone_number,
 
+  });
+
+
+  // tasks is an array of objects that contain the information for each task (title, start date, etc.)
   const [tasks, setTasks] = useState(
     userInfo.tasks.map((task) => ({
       ...task,
@@ -36,6 +45,8 @@ const HomePage = () => {
   if (!token) {
     navigate("/");
   }
+
+  // modalInfo contains the event that was clicked on (information here is saved in the database)
   const [modalInfo, setModalInfo] = useState({
     show: false,
     event: {},
@@ -44,10 +55,15 @@ const HomePage = () => {
 
   const [createTaskInfo, setCreateTaskInfo] = useState({show: false, date: null});
 
+  // task is the task that is being edited (contains information that has not been saved yet)
   const [task, setTask] = useState({});
 
+  const [radius, setRadius] = useState(10);
+
+  const [contractors, setContractors] = useState();
+
   const handleBackClick = (e) => {
-    console.log("on back click, task: " + JSON.stringify(task));
+    console.log("on back click, modalInfo: " + JSON.stringify(modalInfo.event.extendedProps));
     // hide create modal
     if (e.target.value === "true") {
       setCreateTaskInfo({show: false, date: null});
@@ -102,10 +118,13 @@ const HomePage = () => {
   };
 
   useEffect(() => {
+    console.log(tasks);
     if (modalInfo.show) {
       setModalInfo({ show: false, event: {}, editing: false });
     } else if (createTaskInfo.show) {
       setCreateTaskInfo({show: false, date: null});
+    } else {
+      setContractors(null);
     }
   }, [tasks]);
 
@@ -119,6 +138,7 @@ const HomePage = () => {
     if (!task.category) {
       return { error: "Please fill in all fields" };
     }
+    const contractorArg = task.contractor.id === -1 ? "unlink" : task.contractor.email;
     const response = await fetch("/api/update-task", {
       method: "PATCH",
       headers: {
@@ -130,6 +150,7 @@ const HomePage = () => {
         "description": task.description,
         "date": task.date,
         "name": task.title,
+        "contractor_email": contractorArg,
         // add contractor after search contractor api call implementation
         "category": task.category,
         "is_completed": task.is_completed,
@@ -141,7 +162,7 @@ const HomePage = () => {
   };
 
   const createTask = async () => {
-    
+    console.log("create task: " + JSON.stringify(task));
     // save task on frontend
     const response = await fetch("/api/create-task", {
       method: "POST",
@@ -153,6 +174,7 @@ const HomePage = () => {
         "description": task.description,
         "date": createTaskInfo.date,
         "task_name": task.title,
+        "contractor_email": task.contractor.email,
         // add contractor after search contractor api call implementation
         "category": task.category,
       }),
@@ -199,11 +221,24 @@ const HomePage = () => {
     return result;
   };
 
+  const searchContractor = async () => { 
+    console.log("radius: " + radius);
+    const response = await fetch(("/api/search-contractors?category=" + task.category + "&distance=" + radius), {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Token ${token}`,
+      }
+    });
+    const result = await response.json();
+    console.log(result);
+    setContractors(result);
+  }
 
 
   return (
     <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-      <Navbarp /> {/* Include the Navbarp component here */}
+      <Navbarp userInfo={{token: token, tasks: tasks}}/> {/* Include the Navbarp component here */}
       <div style={{ width: "100vw", maxWidth: "100%", display: "flex", justifyContent: "center" }}>
         <h1>Your Tasks</h1>
       </div>
@@ -218,6 +253,9 @@ const HomePage = () => {
             handleDeleteClick={null}
             create={true}
             createDate={createTaskInfo.date}
+            setRadius={setRadius}
+            contractors={contractors}
+            searchContractor={searchContractor}
           />
         )}
         {modalInfo.show && (
@@ -230,6 +268,9 @@ const HomePage = () => {
             handleDeleteClick={handleDeleteClick}
             create={false}
             createDate={null}
+            setRadius={setRadius}
+            contractors={contractors}
+            searchContractor={searchContractor}
           />
         )}
         <FullCalendar

@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Link } from 'react-router-dom';
 import { useNavigate } from "react-router-dom";
 import "./MainPage/index.css"
-const Navbarp = () => {
+const Navbarp = (userInfo) => {
     return (
         <nav className="navbar navbar-expand-lg navbar-light bg-light">
             <div className="container-fluid">
@@ -22,7 +22,7 @@ const Navbarp = () => {
                                 settings
                             </a>
                             <ul className="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                                <li><Link className="dropdown-item" to="/settings">setting</Link></li>
+                                <li><Link className="dropdown-item" to="/settings" state={userInfo}>setting</Link></li>
                                 <li><Link className="dropdown-item" to="/">Logout</Link></li>
 
                             </ul>
