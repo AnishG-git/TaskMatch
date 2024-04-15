@@ -20,29 +20,25 @@ function SettingsPage() {
         <div className="sidebar-item active">Settings</div>
       </div>
       <div className="content">
-        <div className="section-title">Account Setting</div>
+        <div className="section-title" style={{color: "white"}}>Account Setting</div>
         <div className="profile-picture">
           <label className="Profile" />
         </div>
         <div className="form-field">
-          <label htmlFor="name">Name</label>
+          <label htmlFor="name" style={{color: "white"}}>Name</label>
           <input type="text" id="name" placeholder="Enter your name" />
         </div>
         <div className="form-field">
-          <label htmlFor="email">Email</label>
+          <label htmlFor="email" style={{color: "white"}}>Email</label>
           <input type="email" id="email" placeholder="Enter your email" />
         </div>
         <div className="form-field">
-          <label htmlFor="zipcode">Zip Code</label>
+          <label htmlFor="zipcode" style={{color: "white"}}>Zip Code</label>
           <input type="text" id="zipcode" placeholder="Enter your zip code" />
         </div>
         <div className="form-field">
-          <label htmlFor="phone">Phone Number</label>
+          <label htmlFor="phone" style={{color: "white"}}>Phone Number</label>
           <input type="tel" id="phone" placeholder="Enter your phone number" />
-        </div>
-        <div className="form-field">
-          <label htmlFor="bio">Bio</label>
-          <textarea id="bio" placeholder="Write a short bio"></textarea>
         </div>
         <div className="actions">
           <button className="update-profile">Update Profile</button>

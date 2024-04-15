@@ -77,7 +77,7 @@ export default function Modal(props) {
             value={create}
             onClick={handleDeleteClick}
             className="back-btn"
-            style={{ position: "absolute", top: "15%", right: "24%", color: "red", borderColor: "red"}}
+            style={{ position: "absolute", top: "15%", right: "25%", color: "red", borderColor: "red"}}
           >
             DELETE
           </button>
@@ -126,7 +126,14 @@ export default function Modal(props) {
           searchContractor={searchContractor}
           contractors={contractors}
         />
-        
+        <TaskRow
+          modalInfo={modalInfo}
+          task={task}
+          setTask={setTask}
+          field="completed"
+          create={create}
+          createDate={null}
+        />
       </div>
     </div>
   );

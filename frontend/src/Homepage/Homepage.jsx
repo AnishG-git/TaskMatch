@@ -14,6 +14,7 @@ const HomePage = () => {
 
   const { userInfo } = location.state || {};
   const token = userInfo.token;
+  console.log(userInfo);
   const [user, setUser] = useState({
     name: userInfo.name,
     email: userInfo.email,
@@ -137,28 +138,39 @@ const HomePage = () => {
   }, [modalInfo.show, createTaskInfo.show]);
 
   const updateTask = async () => {
-    console.log(task.category);
+    console.log("completed: " + task.completed);
     if (!task.category) {
       return { error: "Please fill in all fields" };
     }
+    let completedArg = "";
+    if (task.completed) {
+      completedArg = "True";
+    } else {
+      completedArg = "False";
+    }
     const contractorArg =
       task.contractor.id === -1 ? "unlink" : task.contractor.email;
+    let body = {
+      task_id: modalInfo.event.id,
+      description: task.description,
+      date: task.date,
+      name: task.title,
+      contractor_email: contractorArg,
+      category: task.category,
+    };
+    if (task.completed !== "") {
+      console.log(task);
+      body.is_completed = task.completed;
+    } else {
+      body.is_completed = modalInfo.event.extendedProps.is_completed;
+    }
     const response = await fetch("/api/update-task", {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Token ${token}`,
       },
-      body: JSON.stringify({
-        task_id: modalInfo.event.id,
-        description: task.description,
-        date: task.date,
-        name: task.title,
-        contractor_email: contractorArg,
-        // add contractor after search contractor api call implementation
-        category: task.category,
-        is_completed: task.is_completed,
-      }),
+      body: JSON.stringify(body),
     });
     const result = await response.json();
     if (result.error) {
@@ -171,20 +183,24 @@ const HomePage = () => {
   const createTask = async () => {
     // console.log("create task: " + JSON.stringify(task));
     // save task on frontend
+    let contractorArg = "";
+    let body = {
+      description: task.description,
+      date: createTaskInfo.date,
+      task_name: task.title,
+      category: task.category,
+    };
+    if (Object.hasOwn(task, "contractor")) {
+      contractorArg = task.contractor.email;
+      body.contractor_email = contractorArg;
+    }
     const response = await fetch("/api/create-task", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Token ${token}`,
       },
-      body: JSON.stringify({
-        description: task.description,
-        date: createTaskInfo.date,
-        task_name: task.title,
-        contractor_email: task.contractor.email,
-        // add contractor after search contractor api call implementation
-        category: task.category,
-      }),
+      body: JSON.stringify(body),
     });
     const result = await response.json();
     console.log(result);

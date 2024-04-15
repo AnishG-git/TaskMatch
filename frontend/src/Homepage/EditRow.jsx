@@ -21,6 +21,13 @@ const TaskRow = (props) => {
       rating: "",
     };
   });
+  const [completed, setCompleted] = useState(() => {
+    if (!create) {
+      console.log("is_completed: ", modalInfo.event.extendedProps.is_completed);
+      return modalInfo.event.extendedProps.is_completed;
+    }
+    return false;
+  });
 
   let extProps = {};
   if (!create) {
@@ -43,11 +50,12 @@ const TaskRow = (props) => {
     !create ? (defaultVal = modalInfo.event.startStr) : (defaultVal = "");
     fieldTitle = "Due Date";
   } else if (field === "contractor") {
-    
     fieldTitle = "Contractor";
   } else if (field === "category") {
     !create ? (defaultVal = extProps.category) : (defaultVal = "");
     fieldTitle = "Category";
+  } else if (field === "completed") {
+    fieldTitle = "Completed?";
   }
 
   useEffect(() => {
@@ -112,11 +120,26 @@ const TaskRow = (props) => {
     }
   }
 
+  useEffect(() => {
+    console.log("completed: ", completed);
+    props.setTask({ ...props.task, completed: completed });
+  }, [completed]);
+
   return (
     <div>
-      <p style={{ fontWeight: "bold", marginBottom: "5px" }}>
-        {displayTitle()}
-      </p>
+      {(field !== "completed") && (
+        <p style={{ fontWeight: "bold", marginBottom: "5px" }}>
+          {displayTitle()}
+        </p>
+      )}
+      {(field === "completed" && modalInfo.show && !modalInfo.editing) && (
+        <>
+        <p style={{ fontWeight: "bold", marginBottom: "5px" }}>
+          {fieldTitle}
+        </p>
+        <p style={{fontWeight: "500"}}>{(completed) ? "Yes" : "No"}</p>
+        </>
+        )}
       {modalInfo.editing || create || field === "contractor" ? (
         field === "category" ? (
           <select
@@ -139,7 +162,7 @@ const TaskRow = (props) => {
             <option value="Plumbing">Plumbing</option>
             <option value="Other">Other</option>
           </select>
-        ) : field !== "contractor" ? (
+        ) : field !== "contractor" && field != "completed" ? (
           <input
             style={{
               width: "100%",
@@ -158,12 +181,8 @@ const TaskRow = (props) => {
               props.setTask({ ...props.task, [field]: e.target.value })
             }
           />
-        ) : (
+        ) : field === "contractor" ? (
           <>
-            <p style={{ fontWeight: "500" }}>
-              category:{" "}
-              {!create ? extProps.contractor.category : selectedContractor.category}
-            </p>
             <p style={{ fontWeight: "500" }}>
               name:{" "}
               {!create
@@ -222,7 +241,7 @@ const TaskRow = (props) => {
                     style={{ marginRight: "10%" }}
                     onClick={props.searchContractor}
                   >
-                    Submit
+                    Search
                   </button>
                 </div>
                 {props.contractors === null ? (
@@ -303,6 +322,30 @@ const TaskRow = (props) => {
               </>
             )}
           </>
+        ) : modalInfo.editing ? (
+          <div
+            style={{
+              display: "flex",
+              alignContent: "center",
+              justifyContent: "space-around",
+              width: "15%",
+              marginTop: "5%",
+            }}
+          >
+            <p style={{ fontWeight: "900", marginBottom: "4px" }}>Completed?</p>
+            <input
+              type="checkbox"
+              // value={completed}
+              defaultChecked={modalInfo.event.extendedProps.is_completed}
+              checked={completed}
+              onChange={(e) => {
+                console.log(e.target.checked);
+                setCompleted(e.target.checked);
+              }}
+            />
+          </div>
+        ) : (
+          <></>
         )
       ) : (
         <DisplayField />

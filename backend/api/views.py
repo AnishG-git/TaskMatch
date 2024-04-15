@@ -286,7 +286,7 @@ def update_task(request):
     name = data.get('task_name')
     description = data.get('description')
     date = data.get('date')
-    is_complete = data.get('is_complete')
+    is_completed = data.get('is_completed')
     contractor_email = data.get('contractor_email')
     category = data.get('category')
 
@@ -316,10 +316,10 @@ def update_task(request):
             task.save()
     elif task.contractor:
             if task.contractor.category != category:
-                return Response({"error": "Contractor category does not match task category"}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({"error": f"Contractor category ({task.contractor.category}) does not match task category ({category})"}, status=status.HTTP_400_BAD_REQUEST)
     try:
         # Getting update fields that were explicitly provided in request body
-        update_fields = {key: value for key, value in data.items() if key in ['name', 'description', 'date', 'is_complete', 'category']}
+        update_fields = {key: value for key, value in data.items() if key in ['name', 'description', 'date', 'is_completed', 'category']}
         # Update task with the other provided fields
         Task.objects.filter(id=task_id).update(**update_fields)
 
