@@ -14,12 +14,11 @@ const HomePage = () => {
 
   const { userInfo } = location.state || {};
   const token = userInfo.token;
-  console.log(userInfo);
   const [user, setUser] = useState({
     name: userInfo.name,
     email: userInfo.email,
-    zip: userInfo.zip_code,
-    phone: userInfo.phone_number,
+    zip_code: userInfo.zip_code,
+    phone_number: userInfo.phone_number,
   });
 
   // tasks is an array of objects that contain the information for each task (title, start date, etc.)
@@ -270,7 +269,7 @@ const HomePage = () => {
     <div
       style={{ display: "flex", flexDirection: "column", alignItems: "center" }}
     >
-      <Navbarp userInfo={{ token: token, tasks: tasks }} />{" "}
+      <Navbarp userInfo={{ token: token, user: user }} />{" "}
       {/* Include the Navbarp component here */}
       <div
         style={{

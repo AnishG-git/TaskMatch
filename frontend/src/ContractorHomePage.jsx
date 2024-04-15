@@ -75,6 +75,7 @@ const ContractorHomePage = () => {
                 <TaskDetail>
                     <h2>Details for: {selectedTask.title}</h2>
                     <p>{selectedTask.description}</p>
+                    <p>fjsldjflskdfj</p>
                 </TaskDetail>
             )}
         </PageContainer>

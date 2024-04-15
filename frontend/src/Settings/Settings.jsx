@@ -1,47 +1,127 @@
-import React from 'react';
-import './Settings.css';
-import { useNavigate, useLocation } from 'react-router-dom';
-
-
+import React from "react";
+import "./Settings.css";
+import { useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 
 function SettingsPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const { userInfo } = location.state || {};
+  const token = userInfo.token;
+  const [user, setUser] = useState(userInfo.user);
 
-  function go2Home() {
-    navigate("/home", { state: { userInfo }});
+  async function go2Home() {
+    // update userInfo with modified userInfo
+    const reponse = await fetch("/api/get-info", {
+      method: "GET",
+      headers: {
+        Authorization: "Token " + token,
+      },
+    });
+    const result = await reponse.json();
+    if (result.error) {
+      alert(result.error);
+      return;
+    }
+    navigate("/home", { state: { userInfo: result } });
   }
+
+  const updateProfile = async () => {
+    const response = await fetch("/api/update-profile", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Token " + token,
+      },
+      body: JSON.stringify(user),
+    });
+    const result = await response.json();
+    if (result.error) {
+      alert(result.error);
+      return;
+    }
+    alert("Profile updated successfully");
+    setUser(result);
+  };
 
   return (
     <div className="settings-container">
       <div className="sidebar">
-        <div className="sidebar-item" onClick={go2Home}>Calendar</div>
+        <div
+          className="sidebar-item"
+          onClick={go2Home}
+        >
+          Calendar
+        </div>
         <div className="sidebar-item active">Settings</div>
       </div>
       <div className="content">
-        <div className="section-title" style={{color: "white"}}>Account Setting</div>
+        <div className="section-title" style={{ color: "white" }}>
+          Account Setting
+        </div>
         <div className="profile-picture">
           <label className="Profile" />
         </div>
         <div className="form-field">
-          <label htmlFor="name" style={{color: "white"}}>Name</label>
-          <input type="text" id="name" placeholder="Enter your name" />
+          <label htmlFor="name" style={{ color: "white" }}>
+            Name
+          </label>
+          <input
+            type="text"
+            onChange={(e) => {
+              setUser({ ...user, name: e.target.value });
+            }}
+            defaultValue={user.name}
+            id="name"
+            placeholder="Enter your name"
+          />
         </div>
         <div className="form-field">
-          <label htmlFor="email" style={{color: "white"}}>Email</label>
-          <input type="email" id="email" placeholder="Enter your email" />
+          <label htmlFor="email" style={{ color: "white" }}>
+            Email
+          </label>
+          <input
+            type="email"
+            id="email"
+            defaultValue={user.email}
+            onChange={(e) => {
+              setUser({ ...user, email: e.target.value });
+            }}
+            placeholder="Enter your email"
+          />
         </div>
         <div className="form-field">
-          <label htmlFor="zipcode" style={{color: "white"}}>Zip Code</label>
-          <input type="text" id="zipcode" placeholder="Enter your zip code" />
+          <label htmlFor="zipcode" style={{ color: "white" }}>
+            Zip Code
+          </label>
+          <input
+            type="text"
+            id="zipcode"
+            defaultValue={user.zip_code}
+            onChange={(e) => {
+              setUser({ ...user, zip_code: e.target.value });
+            }}
+            placeholder="Enter your zip code"
+          />
         </div>
         <div className="form-field">
-          <label htmlFor="phone" style={{color: "white"}}>Phone Number</label>
-          <input type="tel" id="phone" placeholder="Enter your phone number" />
+          <label htmlFor="phone" style={{ color: "white" }}>
+            Phone Number
+          </label>
+          <input
+            type="tel"
+            id="phone"
+            defaultValue={user.phone_number}
+            onChange={(e) => {
+              setUser({ ...user, phone_number: e.target.value });
+            }}
+            placeholder="Enter your phone number"
+          />
         </div>
         <div className="actions">
-          <button className="update-profile">Update Profile</button>
+          <button className="update-profile" onClick={updateProfile}>
+            Update Profile
+          </button>
           <button className="reset">Reset</button>
         </div>
       </div>

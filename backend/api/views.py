@@ -5,7 +5,7 @@ from django.contrib.auth import authenticate
 from .models import Customer, Contractor, ToDoList, Task
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
-from .serializers import TaskSerializer, ContractorSerializer
+from .serializers import CustomerSerializer, TaskSerializer, ContractorSerializer
 from .helpers import get_distance, validate_zip
 import heapq
 
@@ -332,19 +332,110 @@ def update_task(request):
         return Response({"error": e}, status=status.HTTP_409_CONFLICT)
 
 
-
-
-    
-
 # See Pdrer - Get tasks
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-def get_tasks(request):
+def get_info(request):
     user = request.user
+    token = request.META.get('HTTP_AUTHORIZATION').split(' ')[1]
+    if hasattr(user, 'contractor'):
+        contractor = Contractor.objects.get(id=user.id)
+        tasks = Task.objects.filter(contractor=contractor)
+        tasks = TaskSerializer(tasks, many=True)
+        userInfo = {
+            "id": user.id,
+            "email": contractor.email,
+            "phone_number": contractor.phone_number,
+            "zip_code": contractor.zip_code,
+            "company_name": contractor.company_name,
+            "category": contractor.category,
+            "rating": contractor.rating,
+            "token": token,
+            "is_contractor": "true",
+            "tasks": tasks.data
+        }
+    else:
+        customer = Customer.objects.get(id=user.id)
+        userInfo = {
+            "id": user.id,
+            "email": user.email,
+            "name": customer.name,
+            "phone_number": user.phone_number,
+            "zip_code": user.zip_code,
+            "token": token,
+            "is_contractor": "false",
+            "tasks": get_tasks_helper(user)
+        }   
+
+        # returns token
+        
+        return Response(userInfo, status=status.HTTP_200_OK)
     # Return JSON of serialized tasks
     return Response(get_tasks_helper(user), status=status.HTTP_200_OK)
     
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def update_profile(request):
+    # Extract data from the request body
+    data = request.data
+    user = request.user
+    email = data.get('email')
+    phone_number = data.get('phone_number')
+    name = data.get('name')
+    zip = data.get('zip_code')
+    company_name = data.get('company_name')
+    category = data.get('category')
 
+    # Check for valid zip code (see helpers.py)
+    if not validate_zip(zip):
+        return Response({"status": "Invalid zip code"}, status=status.HTTP_400_BAD_REQUEST)
+    
+    # If company name and category are provided, create a Contractor
+    if (company_name and category):
+        # Check if Contractor with provided email or phone number already exists
+        if Contractor.objects.filter(email=email).exists() and email != user.email:
+            return Response({"status": "user already exists, email is not unique"}, status=status.HTTP_409_CONFLICT)
+        
+        if Contractor.objects.filter(phone_number=phone_number).exists() and phone_number != user.phone_number:
+            return Response({"status": "user already exists, phone number is not unique"}, status=status.HTTP_409_CONFLICT)
+        
+        # Create a new Contractor
+        try:
+            Contractor.objects.filter(id=user.id).update(
+                email=email, 
+                phone_number=phone_number,
+                zip_code=zip,
+                company_name=company_name,
+                category=category
+            )
+            serializer = ContractorSerializer(Contractor.objects.get(id=user.id))
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        
+        except Exception as e:
+            # Handle exceptions if any while creating a new Contractor
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+    else:
+        # Check if Customer with provided email or phone number already exists
+        if Customer.objects.filter(email=email).exists() and email != user.email:
+            return Response({"error": "user already exists, email is not unique"}, status=status.HTTP_409_CONFLICT)
+        
+        if Customer.objects.filter(phone_number=phone_number).exists() and phone_number != user.phone_number:
+            return Response({"error": "user already exists, phone number is not unique"}, status=status.HTTP_409_CONFLICT)
+        
+        # Create a new Customer
+        try:
+            Customer.objects.filter(id=user.id).update(
+                email=email, 
+                name=name,
+                phone_number=phone_number,
+                zip_code=zip
+            )
+            serializer = CustomerSerializer(Customer.objects.get(id=user.id))
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        except Exception as e:
+            # Handle exceptions if any while creating a new Customer
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 # Anish Garikipati - Search for contractors

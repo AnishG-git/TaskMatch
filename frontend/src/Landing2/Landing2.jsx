@@ -3,9 +3,9 @@ import { useState } from "react";
 // import { useLocation } from "wouter";
 import { useNavigate } from "react-router-dom";
 import CustomerSignUp from "../CustomerSignUp/CustomerSignUp";
-import Navbarp from '../Navbarp';
+import Navbarp from "../Navbarp";
 import "./Landing2.css";
-import "../MainPage/index.css"
+import "../MainPage/index.css";
 export default function Landing2() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
@@ -21,7 +21,6 @@ export default function Landing2() {
   };
 
   const handleLogin = async () => {
-
     if (email === "" || password === "") {
       setLoginStatus("Please fill in all fields");
       return;
@@ -42,14 +41,16 @@ export default function Landing2() {
     if (token) {
       setLoginStatus("Login successful");
       console.log(JSON.stringify(result));
-      go2Home(result);
+      if (result.is_contractor === "true") {
+        navigate("/ContractorHomePage", { state: { userInfo: result } });
+      } else {
+        go2Home(result);
+      }
     }
   };
 
   return (
-
     <div className="container" id="landingPage">
-
       <Navbarp />
 
       <h1>
@@ -58,14 +59,29 @@ export default function Landing2() {
       <p>Your All-in-One Task Management Solution</p>
       <form>
         <div className="form-group">
-          <input type="email" placeholder="EMAIL" className="login-field" onChange={(e) => setEmail(e.target.value)} />
+          <input
+            type="email"
+            placeholder="EMAIL"
+            className="login-field"
+            onChange={(e) => setEmail(e.target.value)}
+          />
         </div>
         <div className="form-group">
-          <input type="password" placeholder="PASSWORD" className="login-field" onChange={(e) => setPassword(e.target.value)} />
+          <input
+            type="password"
+            placeholder="PASSWORD"
+            className="login-field"
+            onChange={(e) => setPassword(e.target.value)}
+          />
         </div>
       </form>
       <div className="buttons">
-        <button type="submit" className="btn" id="signInBtn" onClick={handleLogin}>
+        <button
+          type="submit"
+          className="btn"
+          id="signInBtn"
+          onClick={handleLogin}
+        >
           SIGN IN
         </button>
         <button className="btn" id="signUpBtn" onClick={customerSignUp}>
@@ -73,9 +89,6 @@ export default function Landing2() {
         </button>
       </div>
       <p>{loginStatus}</p>
-
     </div>
-
-
   );
 }

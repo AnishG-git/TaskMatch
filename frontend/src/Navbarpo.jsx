@@ -23,8 +23,7 @@ const Navbarp = (userInfo) => {
                             </a>
                             <ul className="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                                 <li><Link className="dropdown-item" to="/settings" state={userInfo}>setting</Link></li>
-                                <li><Link className="dropdown-item" to="/">Logout</Link></li>
-
+                                <li><Link className="dropdown-item" to={"/"}>Logout</Link></li>
                             </ul>
                         </li>
                     </ul>
