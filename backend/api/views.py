@@ -8,6 +8,7 @@ from rest_framework.permissions import IsAuthenticated
 from .serializers import CustomerSerializer, TaskSerializer, ContractorSerializer
 from .helpers import get_distance, validate_zip
 import heapq
+from django.core.validators import validate_email
 
 
 
@@ -290,6 +291,7 @@ def update_task(request):
     contractor_email = data.get('contractor_email')
     category = data.get('category')
 
+
     for key, value in data.items():
         print(f'{key}: {value}\n')
     # Checking if contractor email was provided
@@ -384,20 +386,37 @@ def update_profile(request):
     company_name = data.get('company_name')
     category = data.get('category')
 
+    # if email is not valid, return error message
+    # need to validate that email is in correct format
+    if not email:
+        return Response({"error": "Email is required"}, status=status.HTTP_400_BAD_REQUEST)
+    if not phone_number:
+        return Response({"error": "Phone number is required"}, status=status.HTTP_400_BAD_REQUEST)
+    if not zip:
+        return Response({"error": "Zip code is required"}, status=status.HTTP_400_BAD_REQUEST)
+    try:
+        validate_email(email)
+    except:
+        return Response({"error": "Please enter a valid email address"}, status=status.HTTP_400_BAD_REQUEST)
+
+    for key, value in data.items():
+        print(f'{key}: {value}\n')
+
     # Check for valid zip code (see helpers.py)
     if not validate_zip(zip):
-        return Response({"status": "Invalid zip code"}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"error": "Invalid zip code"}, status=status.HTTP_400_BAD_REQUEST)
     
     # If company name and category are provided, create a Contractor
     if (company_name and category):
         # Check if Contractor with provided email or phone number already exists
         if Contractor.objects.filter(email=email).exists() and email != user.email:
-            return Response({"status": "user already exists, email is not unique"}, status=status.HTTP_409_CONFLICT)
+            return Response({"error": "user already exists, email is not unique"}, status=status.HTTP_409_CONFLICT)
         
         if Contractor.objects.filter(phone_number=phone_number).exists() and phone_number != user.phone_number:
-            return Response({"status": "user already exists, phone number is not unique"}, status=status.HTTP_409_CONFLICT)
+            return Response({"error": "user already exists, phone number is not unique"}, status=status.HTTP_409_CONFLICT)
         
-        # Create a new Contractor
+        # update contractor
+        print(f'user id from django: {user.id}')
         try:
             Contractor.objects.filter(id=user.id).update(
                 email=email, 

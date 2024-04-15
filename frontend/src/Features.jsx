@@ -85,8 +85,8 @@ const FeaturesPage = () => {
         <PageContainer>
             <Navbarp />
             <Header>
-                <Title>Explore Our Features</Title>
-                <Subtitle>Connecting clients with the right contractors to get tasks done efficiently.</Subtitle>
+                <Title style={{color: 'white'}}>Explore Our Features</Title>
+                <Subtitle style={{color: 'whitesmoke'}}>Connecting clients with the right contractors to get tasks done efficiently.</Subtitle>
             </Header>
             <FeaturesGrid>
                 <FeatureCard>

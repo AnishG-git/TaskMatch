@@ -16,4 +16,4 @@ class CustomerSerializer(serializers.ModelSerializer):
 class ContractorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Contractor
-        fields = ['id', 'email', 'phone_number', 'zip_code', 'company_name', 'rating']
+        fields = ['id', 'email', 'phone_number', 'zip_code', 'company_name', 'rating', 'category']

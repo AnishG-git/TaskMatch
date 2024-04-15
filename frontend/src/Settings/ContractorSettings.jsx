@@ -8,8 +8,13 @@ function ContractorSettings() {
   const location = useLocation();
   const { userInfo } = location.state || {};
   const token = userInfo.token;
-  const [user, setUser] = useState(userInfo);
-  console.log(userInfo);
+  const [user, setUser] = useState({
+    company_name: userInfo.company_name,
+    email: userInfo.email,
+    zip_code: userInfo.zip_code,
+    category: userInfo.category,
+    phone_number: userInfo.phone_number,
+  });
 
   async function go2Home() {
     // update userInfo with modified userInfo
@@ -24,7 +29,6 @@ function ContractorSettings() {
       alert(result.error);
       return;
     }
-    console.log(result);
     navigate("/ContractorHomePage", { state: { userInfo: result } });
   }
 
@@ -43,7 +47,13 @@ function ContractorSettings() {
       return;
     }
     alert("Profile updated successfully");
-    setUser(result);
+    setUser({
+      company_name: result.company_name,
+      email: result.email,
+      zip_code: result.zip_code,
+      category: result.category,
+      phone_number: result.phone_number,
+    });
   };
 
   return (
@@ -72,7 +82,7 @@ function ContractorSettings() {
             onChange={(e) => {
               setUser({ ...user, company_name: e.target.value });
             }}
-            defaultValue={user.company_name}
+            defaultValue={userInfo.company_name}
           />
         </div>
         <div className="form-field">
@@ -84,9 +94,9 @@ function ContractorSettings() {
             id="email"
             placeholder="Enter your email"
             onChange={(e) => {
-              setUser({ ...user, emai: e.target.value });
+              setUser({ ...user, email: e.target.value });
             }}
-            defaultValue={user.email}
+            defaultValue={userInfo.email}
           />
         </div>
         <div className="form-field">
@@ -100,7 +110,7 @@ function ContractorSettings() {
             onChange={(e) => {
               setUser({ ...user, zip_code: e.target.value });
             }}
-            defaultValue={user.zip_code}
+            defaultValue={userInfo.zip_code}
           />
         </div>
         <div className="form-field">
@@ -112,9 +122,9 @@ function ContractorSettings() {
             id="category"
             placeholder="Enter your category"
             onChange={(e) => {
-              setUser({ ...user, category: e.target.value });
+              setUser({ ...user, "category": e.target.value });
             }}
-            defaultValue={user.category}
+            defaultValue={userInfo.category}
           />
         </div>
         <div className="form-field">
@@ -128,7 +138,7 @@ function ContractorSettings() {
             onChange={(e) => {
               setUser({ ...user, phone_number: e.target.value });
             }}
-            defaultValue={user.phone_number}
+            defaultValue={userInfo.phone_number}
           />
         </div>
         <div className="actions">

@@ -22,7 +22,7 @@ const Navbarp = (userInfo) => {
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
               >
-                settings
+                Settings
               </a>
               <ul
                 className="dropdown-menu"
@@ -39,7 +39,7 @@ const Navbarp = (userInfo) => {
                     }
                     state={userInfo}
                   >
-                    setting
+                    Settings
                   </Link>
                 </li>
                 <li>

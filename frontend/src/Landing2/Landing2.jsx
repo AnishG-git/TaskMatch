@@ -53,10 +53,10 @@ export default function Landing2() {
     <div className="container" id="landingPage">
       <Navbarp />
 
-      <h1>
+      <h1 style={{color: "white"}}>
         Welcome to <span>TaskMatch</span>
       </h1>
-      <p>Your All-in-One Task Management Solution</p>
+      <p style={{color: "white"}}>Your All-in-One Task Management Solution</p>
       <form>
         <div className="form-group">
           <input
@@ -78,17 +78,18 @@ export default function Landing2() {
       <div className="buttons">
         <button
           type="submit"
-          className="btn"
+          className="back-btn"
           id="signInBtn"
           onClick={handleLogin}
+          style={{marginRight: "1rem"}}
         >
           SIGN IN
         </button>
-        <button className="btn" id="signUpBtn" onClick={customerSignUp}>
+        <button className="back-btn" id="signUpBtn" onClick={customerSignUp} style={{marginLeft: "1rem"}}>
           SIGN UP
         </button>
       </div>
-      <p>{loginStatus}</p>
+      <p style={{color: "white"}}>{loginStatus}</p>
     </div>
   );
 }

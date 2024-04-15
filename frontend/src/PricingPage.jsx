@@ -108,8 +108,8 @@ const PricingPage = () => {
         <PageContainer>
             <Navbarp />
             <Header>
-                <Title>Our Pricing Plans</Title>
-                <Subtitle>Select the plan that best suits your needs</Subtitle>
+                <Title style={{color:'white'}}>Our Pricing Plans</Title>
+                <Subtitle style={{color: 'white'}}>Select the plan that best suits your needs</Subtitle>
             </Header>
             <PlansGrid>
                 <PlanCard>

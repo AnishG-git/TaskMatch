@@ -56,7 +56,7 @@ export default function CustomerSignUp() {
       >
         BACK
       </button>
-      <h2 className="signup-title">
+      <h2 className="signup-title" style={{color: "white"}}>
         Welcome to your All-in-One Task Management Solution
       </h2>
       <div>
@@ -71,6 +71,7 @@ export default function CustomerSignUp() {
           placeholder="EMAIL"
           className="signup-field"
           onChange={(e) => setUserInfo({ ...userInfo, email: e.target.value })}
+          style={{ margin: "1rem" }}
         />
         <input
           type="password"
@@ -88,6 +89,7 @@ export default function CustomerSignUp() {
           onChange={(e) =>
             setUserInfo({ ...userInfo, zip_code: e.target.value })
           }
+          style={{ marginRight: "0.5rem" }}
         />
         <input
           type="tel"
@@ -97,9 +99,10 @@ export default function CustomerSignUp() {
           onChange={(e) =>
             setUserInfo({ ...userInfo, phone_number: e.target.value })
           }
+          style={{ marginLeft: "0.5rem" }}
         />
       </div>
-      <button className="btn" style={{ margin: "1rem" }} onClick={handleSignUp}>
+      <button className="back-btn" style={{ margin: "1rem" }} onClick={handleSignUp}>
         SIGN UP
       </button>
       <p style={{ color: "white", margin: "1rem" }}>{signUpStatus}</p>

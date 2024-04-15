@@ -58,7 +58,7 @@ export default function ContractorSignUp() {
       >
         BACK
       </button>
-      <h2 className="signup-title">
+      <h2 className="signup-title" style={{color: "white"}}>
         Contractor Registration
       </h2>
       <div>
@@ -75,6 +75,7 @@ export default function ContractorSignUp() {
           placeholder="EMAIL"
           className="signup-field"
           onChange={(e) => setUserInfo({ ...userInfo, email: e.target.value })}
+          style={{margin: "1rem"}}
         />
         <input
           type="password"
@@ -101,6 +102,7 @@ export default function ContractorSignUp() {
           onChange={(e) =>
             setUserInfo({ ...userInfo, phone_number: e.target.value })
           }
+          style={{margin: "1rem"}}
         />
         <input
           type="text"
@@ -111,7 +113,7 @@ export default function ContractorSignUp() {
           }
         />
       </div>
-      <button className="btn" style={{ margin: "1rem" }} onClick={handleSignUp}>
+      <button className="back-btn" style={{ margin: "1rem" }} onClick={handleSignUp}>
         SIGN UP
       </button>
       <p style={{ color: "white", margin: "1rem" }}>{signUpStatus}</p>

@@ -27,6 +27,8 @@ const HomePage = () => {
       ...task,
       title: task.name,
       start: task.date,
+      backgroundColor: (task.is_completed === "true" || task.is_completed === true) ? "#C04000" : "#009E60",
+      borderColor: "white"
     }))
   );
 
@@ -36,6 +38,9 @@ const HomePage = () => {
         ...task,
         title: task.name,
         start: task.date,
+        // if the task is completed, color it red
+        backgroundColor: task.is_completed === true ? "#C04000" : "#009E60",
+        borderColor: "white"
       }))
     );
   }
@@ -55,6 +60,8 @@ const HomePage = () => {
     show: false,
     date: null,
   });
+
+  console.log(modalInfo.event);
 
   // task is the task that is being edited (contains information that has not been saved yet)
   const [task, setTask] = useState({});
