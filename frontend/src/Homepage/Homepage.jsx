@@ -28,7 +28,7 @@ const HomePage = () => {
       title: task.name,
       start: task.date,
       backgroundColor: (task.is_completed === "true" || task.is_completed === true) ? "#C04000" : "#009E60",
-      borderColor: "white"
+      borderColor: (task.is_completed === "true" || task.is_completed === true) ? "#C04000" : "#009E60",
     }))
   );
 
@@ -39,8 +39,8 @@ const HomePage = () => {
         title: task.name,
         start: task.date,
         // if the task is completed, color it red
-        backgroundColor: task.is_completed === true ? "#C04000" : "#009E60",
-        borderColor: "white"
+        backgroundColor: (task.is_completed === "true" || task.is_completed === true) ? "#C04000" : "#009E60",
+        borderColor: (task.is_completed === "true" || task.is_completed === true) ? "#C04000" : "#009E60",
       }))
     );
   }
@@ -290,7 +290,7 @@ const HomePage = () => {
           justifyContent: "center",
         }}
       >
-        <h1>Your Tasks</h1>
+        <h1 style={{color: "white", marginBottom: "0px", marginTop: "1.5rem"}}>Your Tasks</h1>
       </div>
       <div style={{ width: "75vw" }}>
         {createTaskInfo.show && (
@@ -337,6 +337,7 @@ const HomePage = () => {
           selectable={true}
           dateClick={handleDateSelect}
           eventClick={handleEventClick}
+          style={{marginTop: "40%"}}
         />
       </div>
     </div>

@@ -247,7 +247,7 @@ const TaskRow = (props) => {
                 {props.contractors === null ? (
                   <></>
                 ) : props.contractors.length === 0 ? (
-                  <p style={{ fontWeight: "500" }}>No contractors found</p>
+                  <p style={{ fontWeight: "500", color: "white" }}>No contractors found</p>
                 ) : (
                   <>
                     <ul style={{ listStyleType: "none", marginTop: "3%" }}>

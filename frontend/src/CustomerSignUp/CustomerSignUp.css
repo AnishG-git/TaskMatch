@@ -33,3 +33,20 @@
     background-color: white;
     color: black;
 }
+
+.fc-toolbar-title {
+    color: white;
+}
+
+.fc-daygrid-day-number {
+    color: white
+}
+
+.fc-col-header-cell-cushion {
+    color: white;
+}
+
+.fc-day-today {
+    background: #286b8f !important;
+    border: none !important;
+}
