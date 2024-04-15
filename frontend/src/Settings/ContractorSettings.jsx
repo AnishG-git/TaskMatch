@@ -1,57 +1,140 @@
-import React from 'react';
-import './settings.css';
+import React from "react";
+import "./Settings.css";
+import { useNavigate, useLocation } from "react-router-dom";
+import { useState } from "react";
 
 function ContractorSettings() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { userInfo } = location.state || {};
+  const token = userInfo.token;
+  const [user, setUser] = useState(userInfo);
+  console.log(userInfo);
+
+  async function go2Home() {
+    // update userInfo with modified userInfo
+    const reponse = await fetch("/api/get-info", {
+      method: "GET",
+      headers: {
+        Authorization: "Token " + token,
+      },
+    });
+    const result = await reponse.json();
+    if (result.error) {
+      alert(result.error);
+      return;
+    }
+    console.log(result);
+    navigate("/ContractorHomePage", { state: { userInfo: result } });
+  }
+
+  const updateProfile = async () => {
+    const response = await fetch("/api/update-profile", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Token " + token,
+      },
+      body: JSON.stringify(user),
+    });
+    const result = await response.json();
+    if (result.error) {
+      alert(result.error);
+      return;
+    }
+    alert("Profile updated successfully");
+    setUser(result);
+  };
+
   return (
     <div className="settings-container">
       <div className="sidebar">
-        <div className="sidebar-item">Home</div>
-        <div className="sidebar-item">Calendar</div>
-        <div className="sidebar-item">Your Activity</div>
+        <div className="sidebar-item" onClick={go2Home}>
+          Your Requests
+        </div>
         <div className="sidebar-item active">Settings</div>
       </div>
       <div className="content">
-        <div className="section-title">Account Setting</div>
+        <div className="section-title" style={{ color: "white" }}>
+          Account Settings
+        </div>
         <div className="profile-picture">
           <label className="Profile" />
         </div>
         <div className="form-field">
-          <label htmlFor="name">Name</label>
-          <input type="text" id="name" placeholder="Enter your name" />
+          <label htmlFor="company-name" style={{ color: "white" }}>
+            Company Name
+          </label>
+          <input
+            type="text"
+            id="company-name"
+            placeholder="Enter your company name"
+            onChange={(e) => {
+              setUser({ ...user, company_name: e.target.value });
+            }}
+            defaultValue={user.company_name}
+          />
         </div>
         <div className="form-field">
-          <label htmlFor="email">Email</label>
-          <input type="email" id="email" placeholder="Enter your email" />
+          <label htmlFor="email" style={{ color: "white" }}>
+            Email
+          </label>
+          <input
+            type="email"
+            id="email"
+            placeholder="Enter your email"
+            onChange={(e) => {
+              setUser({ ...user, emai: e.target.value });
+            }}
+            defaultValue={user.email}
+          />
         </div>
         <div className="form-field">
-          <label htmlFor="ratings">Ratings</label>
-          <div className="rating-stars">
-            <i className="fa fa-star"></i>
-            <i className="fa fa-star"></i>
-            <i className="fa fa-star"></i>
-            <i className="fa fa-star"></i>
-            <i className="fa fa-star"></i>
-          </div>
+          <label htmlFor="name" style={{ color: "white" }}>
+            Zip Code
+          </label>
+          <input
+            type="text"
+            id="name"
+            placeholder="Enter your zip code"
+            onChange={(e) => {
+              setUser({ ...user, zip_code: e.target.value });
+            }}
+            defaultValue={user.zip_code}
+          />
         </div>
         <div className="form-field">
-          <label htmlFor="company-name">Company Name</label>
-          <input type="text" id="company-name" placeholder="Enter your company name" />
+          <label htmlFor="category" style={{ color: "white" }}>
+            Category
+          </label>
+          <input
+            type="text"
+            id="category"
+            placeholder="Enter your category"
+            onChange={(e) => {
+              setUser({ ...user, category: e.target.value });
+            }}
+            defaultValue={user.category}
+          />
         </div>
         <div className="form-field">
-          <label htmlFor="category">Category</label>
-          <input type="text" id="category" placeholder="Enter your category" />
-        </div>
-        <div className="form-field">
-          <label htmlFor="phone">Phone Number</label>
-          <input type="tel" id="phone" placeholder="Enter your phone number" />
-        </div>
-        <div className="form-field">
-          <label htmlFor="bio">Bio</label>
-          <textarea id="bio" placeholder="Write a short bio"></textarea>
+          <label htmlFor="phone" style={{ color: "white" }}>
+            Phone Number
+          </label>
+          <input
+            type="tel"
+            id="phone"
+            placeholder="Enter your phone number"
+            onChange={(e) => {
+              setUser({ ...user, phone_number: e.target.value });
+            }}
+            defaultValue={user.phone_number}
+          />
         </div>
         <div className="actions">
-          <button className="update-profile">Update Profile</button>
-          <button className="reset">Reset</button>
+          <button className="update-profile" onClick={updateProfile}>
+            Update Profile
+          </button>
         </div>
       </div>
     </div>

@@ -368,10 +368,8 @@ def get_info(request):
         }   
 
         # returns token
-        
-        return Response(userInfo, status=status.HTTP_200_OK)
     # Return JSON of serialized tasks
-    return Response(get_tasks_helper(user), status=status.HTTP_200_OK)
+    return Response(userInfo, status=status.HTTP_200_OK)
     
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])

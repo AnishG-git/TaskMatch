@@ -247,6 +247,10 @@ const HomePage = () => {
 
   const searchContractor = async () => {
     console.log("radius: " + radius);
+    if (radius < 0) {
+      alert("Please enter a valid radius");
+      return;
+    }
     const response = await fetch(
       "/api/search-contractors?category=" +
         task.category +
@@ -269,7 +273,7 @@ const HomePage = () => {
     <div
       style={{ display: "flex", flexDirection: "column", alignItems: "center" }}
     >
-      <Navbarp userInfo={{ token: token, user: user }} />{" "}
+      <Navbarp userInfo={{ token: token, user: user, is_contractor: userInfo.is_contractor }} />{" "}
       {/* Include the Navbarp component here */}
       <div
         style={{

@@ -122,7 +122,6 @@ function SettingsPage() {
           <button className="update-profile" onClick={updateProfile}>
             Update Profile
           </button>
-          <button className="reset">Reset</button>
         </div>
       </div>
     </div>

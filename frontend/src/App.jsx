@@ -12,6 +12,7 @@ import ContractorHomePage from './ContractorHomePage';
 import Navbarpo from './Navbarpo';
 import Features from './Features';
 import PricingPage from './PricingPage';
+import ContractorSettings from "./Settings/ContractorSettings";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import SettingsPage from "./Settings/Settings";
 import 'bootstrap/dist/js/bootstrap.bundle.min';
@@ -30,6 +31,7 @@ export default function App() {
         <Route path="/contractor-signup" element={<ContractorSignUp />} />
         <Route path="/home" element={<HomePage />} />
         <Route path="/settings" element={<SettingsPage />} />
+        <Route path="/contractor-settings" element={<ContractorSettings />} />
         <Route path="/ContractorHomePage" element={<ContractorHomePage />} />
         <Route path="/Features" element={<Features />} />
         <Route path="/Pricing" element={<PricingPage />} />
