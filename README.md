@@ -1,7 +1,7 @@
 # TaskMatch
 
 Setup:
-
+**Backend**
 1. Make sure you have Python 3.11 or higher installed on your machine
 2. Open a terminal (in VS code preferably)
 3. make sure you are in the backend folder (cd backend)
@@ -15,3 +15,11 @@ Setup:
 11. Type **python manage.py migrate** to migrate changes
 12. Type **python manage.py runserver** to run local server
 13. Call APIs from Postman (API documentation here: https://docs.google.com/document/d/1zbgNH57ql_V_3nf_F7vgHqkWppIK6tNKxR0UsZjB8Nw/edit?usp=sharing)
+
+
+**Frontend**
+1. Make sure you have Node.js installed on your machine
+2. Open a terminal (in VS code preferably)
+3. make sure you are in the frontend folder (cd frontend)
+4. npm i
+5. npm run dev
