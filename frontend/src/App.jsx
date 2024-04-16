@@ -17,26 +17,15 @@ export default function App() {
     <Router>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} /> {/*  Previous path: /  */}
-        <Route path="/customer-signup" element={<CustomerSignUp />} />{" "}
-        {/*  Previous path: /Login  */}
-        <Route path="/contractor-signup" element={<ContractorSignUp />} />{" "}
-        {/*  Previous path: /customer-signup  */}
-        <Route path="/calendar" element={<Calendar />} />{" "}
-        {/*  Previous path: /contractor-signup  */}
-        <Route path="/settings" element={<SettingsPage />} />{" "}
-        {/*  Previous path: /settings  */}
-        <Route
-          path="/contractor-settings"
-          element={<ContractorSettings />}
-        />{" "}
-        {/*  Previous path: /contractor-settings  */}
-        <Route path="/contractor" element={<ContractorView />} />{" "}
-        {/*  Previous path: /ContractorHomePage  */}
-        <Route path="/features" element={<Features />} />{" "}
-        {/*  Previous path: /Features  */}
-        <Route path="/pricing" element={<PricingPage />} />{" "}
-        {/*  Previous path: /Pricing  */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/customer-signup" element={<CustomerSignUp />} />
+        <Route path="/contractor-signup" element={<ContractorSignUp />} />
+        <Route path="/calendar" element={<Calendar />} />
+        <Route path="/settings" element={<SettingsPage />} />
+        <Route path="/contractor-settings" element={<ContractorSettings />} />
+        <Route path="/contractor" element={<ContractorView />} />
+        <Route path="/features" element={<Features />} />
+        <Route path="/pricing" element={<PricingPage />} />
       </Routes>
     </Router>
   );
