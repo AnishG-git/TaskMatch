@@ -12,7 +12,6 @@ function ContractorSettings() {
     company_name: userInfo.company_name,
     email: userInfo.email,
     zip_code: userInfo.zip_code,
-    category: userInfo.category,
     phone_number: userInfo.phone_number,
   });
 
@@ -51,7 +50,6 @@ function ContractorSettings() {
       company_name: result.company_name,
       email: result.email,
       zip_code: result.zip_code,
-      category: result.category,
       phone_number: result.phone_number,
     });
   };
@@ -111,20 +109,6 @@ function ContractorSettings() {
               setUser({ ...user, zip_code: e.target.value });
             }}
             defaultValue={userInfo.zip_code}
-          />
-        </div>
-        <div className="form-field">
-          <label htmlFor="category" style={{ color: "white" }}>
-            Category
-          </label>
-          <input
-            type="text"
-            id="category"
-            placeholder="Enter your category"
-            onChange={(e) => {
-              setUser({ ...user, "category": e.target.value });
-            }}
-            defaultValue={userInfo.category}
           />
         </div>
         <div className="form-field">

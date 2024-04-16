@@ -384,7 +384,6 @@ def update_profile(request):
     name = data.get('name')
     zip = data.get('zip_code')
     company_name = data.get('company_name')
-    category = data.get('category')
 
     # if email is not valid, return error message
     # need to validate that email is in correct format
@@ -407,7 +406,7 @@ def update_profile(request):
         return Response({"error": "Invalid zip code"}, status=status.HTTP_400_BAD_REQUEST)
     
     # If company name and category are provided, create a Contractor
-    if (company_name and category):
+    if (company_name):
         # Check if Contractor with provided email or phone number already exists
         if Contractor.objects.filter(email=email).exists() and email != user.email:
             return Response({"error": "user already exists, email is not unique"}, status=status.HTTP_409_CONFLICT)
@@ -423,7 +422,6 @@ def update_profile(request):
                 phone_number=phone_number,
                 zip_code=zip,
                 company_name=company_name,
-                category=category
             )
             serializer = ContractorSerializer(Contractor.objects.get(id=user.id))
             return Response(serializer.data, status=status.HTTP_201_CREATED)
