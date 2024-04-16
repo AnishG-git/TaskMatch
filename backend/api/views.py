@@ -192,6 +192,8 @@ def create_task(request):
                 category=category
             ) 
         else:
+            if contractor[0].category != category:
+                return Response({"error": f'Contractor category ({contractor[0].category}) does not match task category ({category})'}, status=status.HTTP_400_BAD_REQUEST)
             # create task with contractor
             Task.objects.create (
                 name=name,
