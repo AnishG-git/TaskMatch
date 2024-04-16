@@ -23,3 +23,26 @@ Setup:
 3. make sure you are in the frontend folder (cd frontend)
 4. npm i
 5. npm run dev
+
+
+**How to use**
+- Click on login/register to navigate to registration page for customer
+- click on contractor dropdown in top right to register as contractor
+- There is only one login page for both customer and contractor. It will redirect you based on what account you signed up as.
+
+
+**Customer**
+- Click on any spot in the calendar to create a task. Name, description, date(autofilled by which day is clicked), and category are required.
+- If a contractor is required for the task, scroll down to contractor search where the customer can search for contractor by radius.
+- Select which contractor you would like to assign to the task.
+- Click save to save the task.
+- Click on any task to update it, and change any information.
+- Note: contractors can only be assigned to a task with a shared category
+
+
+**Contractor**
+- Tasks that have been assigned to you are displayed on your screen.
+- Click on any task to see its details.
+- Click on settings dropdown in top right to either logout or go to settings.
+- In settings, contractor can update their profile.
+- Note: contractors cannot currently update their category as it will affect users with tasks assigned to them.
