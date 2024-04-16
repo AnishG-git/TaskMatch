@@ -1,4 +1,4 @@
-import TaskRow from "./EditRow";
+import TaskRow from "./TaskRow";
 
 export default function Modal(props) {
   const {
@@ -12,7 +12,7 @@ export default function Modal(props) {
     createDate,
     setRadius,
     contractors,
-    searchContractor
+    searchContractor,
   } = props;
   return (
     <div
@@ -74,13 +74,19 @@ export default function Modal(props) {
           </button>
           {!create && (
             <button
-            value={create}
-            onClick={handleDeleteClick}
-            className="back-btn"
-            style={{ position: "absolute", top: "15%", right: "25%", color: "red", borderColor: "red"}}
-          >
-            DELETE
-          </button>
+              value={create}
+              onClick={handleDeleteClick}
+              className="back-btn"
+              style={{
+                position: "absolute",
+                top: "15%",
+                right: "25%",
+                color: "red",
+                borderColor: "red",
+              }}
+            >
+              DELETE
+            </button>
           )}
         </div>
         <TaskRow

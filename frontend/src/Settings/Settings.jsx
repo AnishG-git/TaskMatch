@@ -23,7 +23,7 @@ function SettingsPage() {
       alert(result.error);
       return;
     }
-    navigate("/home", { state: { userInfo: result } });
+    navigate("/calendar", { state: { userInfo: result } });
   }
 
   const updateProfile = async () => {

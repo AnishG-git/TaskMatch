@@ -1,9 +1,10 @@
 import { useState } from "react";
-import "./CustomerSignUp.css";
-import { useNavigate } from "react-router-dom";
+import "./ContractorSignUp.css";
+import { useNavigate, useLocation } from "react-router-dom";
 
-export default function CustomerSignUp() {
+export default function ContractorSignUp() {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [userInfo, setUserInfo] = useState({
     name: "",
@@ -18,7 +19,7 @@ export default function CustomerSignUp() {
   const handleSignUp = async () => {
     console.log("userInfo: " + JSON.stringify(userInfo));
     if (
-      userInfo.name === "" ||
+      userInfo.company_name === "" ||
       userInfo.email === "" ||
       userInfo.password === "" ||
       userInfo.zip_code === "" ||
@@ -45,8 +46,9 @@ export default function CustomerSignUp() {
   };
 
   const back = () => {
-    navigate("/Login");
+    navigate(-1);
   };
+  
   return (
     <div className="container" id="signUpForm">
       <button
@@ -57,21 +59,23 @@ export default function CustomerSignUp() {
         BACK
       </button>
       <h2 className="signup-title" style={{color: "white"}}>
-        Welcome to your All-in-One Task Management Solution
+        Contractor Registration
       </h2>
       <div>
         <input
           type="text"
-          placeholder="NAME"
+          placeholder="COMPANY NAME"
           className="signup-field"
-          onChange={(e) => setUserInfo({ ...userInfo, name: e.target.value })}
+          onChange={(e) =>
+            setUserInfo({ ...userInfo, company_name: e.target.value })
+          }
         />
         <input
           type="email"
           placeholder="EMAIL"
           className="signup-field"
           onChange={(e) => setUserInfo({ ...userInfo, email: e.target.value })}
-          style={{ margin: "1rem" }}
+          style={{margin: "1rem"}}
         />
         <input
           type="password"
@@ -89,7 +93,6 @@ export default function CustomerSignUp() {
           onChange={(e) =>
             setUserInfo({ ...userInfo, zip_code: e.target.value })
           }
-          style={{ marginRight: "0.5rem" }}
         />
         <input
           type="tel"
@@ -99,7 +102,15 @@ export default function CustomerSignUp() {
           onChange={(e) =>
             setUserInfo({ ...userInfo, phone_number: e.target.value })
           }
-          style={{ marginLeft: "0.5rem" }}
+          style={{margin: "1rem"}}
+        />
+        <input
+          type="text"
+          placeholder="CATEGORY"
+          className="signup-field"
+          onChange={(e) =>
+            setUserInfo({ ...userInfo, category: e.target.value })
+          }
         />
       </div>
       <button className="back-btn" style={{ margin: "1rem" }} onClick={handleSignUp}>

@@ -1,9 +1,8 @@
 import { useState } from "react";
-import "./ContractorSignUp.css";
-import { useLocation } from "wouter";
+import "./CustomerSignUp.css";
 import { useNavigate } from "react-router-dom";
 
-export default function ContractorSignUp() {
+export default function CustomerSignUp() {
   const navigate = useNavigate();
 
   const [userInfo, setUserInfo] = useState({
@@ -19,7 +18,7 @@ export default function ContractorSignUp() {
   const handleSignUp = async () => {
     console.log("userInfo: " + JSON.stringify(userInfo));
     if (
-      userInfo.company_name === "" ||
+      userInfo.name === "" ||
       userInfo.email === "" ||
       userInfo.password === "" ||
       userInfo.zip_code === "" ||
@@ -46,9 +45,8 @@ export default function ContractorSignUp() {
   };
 
   const back = () => {
-    navigate("/");
+    navigate("/login");
   };
-  
   return (
     <div className="container" id="signUpForm">
       <button
@@ -59,23 +57,21 @@ export default function ContractorSignUp() {
         BACK
       </button>
       <h2 className="signup-title" style={{color: "white"}}>
-        Contractor Registration
+        Welcome to your All-in-One Task Management Solution
       </h2>
       <div>
         <input
           type="text"
-          placeholder="COMPANY NAME"
+          placeholder="NAME"
           className="signup-field"
-          onChange={(e) =>
-            setUserInfo({ ...userInfo, company_name: e.target.value })
-          }
+          onChange={(e) => setUserInfo({ ...userInfo, name: e.target.value })}
         />
         <input
           type="email"
           placeholder="EMAIL"
           className="signup-field"
           onChange={(e) => setUserInfo({ ...userInfo, email: e.target.value })}
-          style={{margin: "1rem"}}
+          style={{ margin: "1rem" }}
         />
         <input
           type="password"
@@ -93,6 +89,7 @@ export default function ContractorSignUp() {
           onChange={(e) =>
             setUserInfo({ ...userInfo, zip_code: e.target.value })
           }
+          style={{ marginRight: "0.5rem" }}
         />
         <input
           type="tel"
@@ -102,15 +99,7 @@ export default function ContractorSignUp() {
           onChange={(e) =>
             setUserInfo({ ...userInfo, phone_number: e.target.value })
           }
-          style={{margin: "1rem"}}
-        />
-        <input
-          type="text"
-          placeholder="CATEGORY"
-          className="signup-field"
-          onChange={(e) =>
-            setUserInfo({ ...userInfo, category: e.target.value })
-          }
+          style={{ marginLeft: "0.5rem" }}
         />
       </div>
       <button className="back-btn" style={{ margin: "1rem" }} onClick={handleSignUp}>

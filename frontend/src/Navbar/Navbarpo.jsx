@@ -2,9 +2,8 @@ import React, { useState } from "react";
 
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import "./MainPage/index.css";
+import "../../index.css";
 const Navbarp = (userInfo) => {
-    
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
       <div className="container-fluid">

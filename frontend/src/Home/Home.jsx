@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import "./index.css"; // Make sure this path is correct relative to where this file is located
+import "../../index.css"; // Make sure this path is correct relative to where this file is located
 import { useNavigate } from "react-router-dom";
 import packageImage from "./package.jpeg";
 
-const MainPage = () => {
+const Home = () => {
   return (
     <div>
       <header>
@@ -31,7 +31,7 @@ const MainPage = () => {
                   </Link>
                 </li>
                 <li className="nav-item">
-                  <Link className="nav-link" to="/Login">
+                  <Link className="nav-link" to="/login">
                     Login/Register
                   </Link>
                 </li>
@@ -106,4 +106,4 @@ const MainPage = () => {
   );
 };
 
-export default MainPage;
+export default Home;

@@ -2,13 +2,12 @@ import React, { useEffect, useState } from "react";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
-import TaskRow from "./EditRow";
 import { useNavigate, useLocation } from "react-router-dom";
 import Modal from "./Modal";
-import Navbarp from "../Navbarpo";
-import "../MainPage/index.css";
+import Navbarp from "../../Navbar/Navbarpo";
+import "../../../index.css";
 
-const HomePage = () => {
+const Calendar = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -27,8 +26,14 @@ const HomePage = () => {
       ...task,
       title: task.name,
       start: task.date,
-      backgroundColor: (task.is_completed === "true" || task.is_completed === true) ? "#C04000" : "#009E60",
-      borderColor: (task.is_completed === "true" || task.is_completed === true) ? "#C04000" : "#009E60",
+      backgroundColor:
+        task.is_completed === "true" || task.is_completed === true
+          ? "#C04000"
+          : "#009E60",
+      borderColor:
+        task.is_completed === "true" || task.is_completed === true
+          ? "#C04000"
+          : "#009E60",
     }))
   );
 
@@ -39,8 +44,14 @@ const HomePage = () => {
         title: task.name,
         start: task.date,
         // if the task is completed, color it red
-        backgroundColor: (task.is_completed === "true" || task.is_completed === true) ? "#C04000" : "#009E60",
-        borderColor: (task.is_completed === "true" || task.is_completed === true) ? "#C04000" : "#009E60",
+        backgroundColor:
+          task.is_completed === "true" || task.is_completed === true
+            ? "#C04000"
+            : "#009E60",
+        borderColor:
+          task.is_completed === "true" || task.is_completed === true
+            ? "#C04000"
+            : "#009E60",
       }))
     );
   }
@@ -280,7 +291,13 @@ const HomePage = () => {
     <div
       style={{ display: "flex", flexDirection: "column", alignItems: "center" }}
     >
-      <Navbarp userInfo={{ token: token, user: user, is_contractor: userInfo.is_contractor }} />{" "}
+      <Navbarp
+        userInfo={{
+          token: token,
+          user: user,
+          is_contractor: userInfo.is_contractor,
+        }}
+      />{" "}
       {/* Include the Navbarp component here */}
       <div
         style={{
@@ -290,7 +307,11 @@ const HomePage = () => {
           justifyContent: "center",
         }}
       >
-        <h1 style={{color: "white", marginBottom: "0px", marginTop: "1.5rem"}}>Your Tasks</h1>
+        <h1
+          style={{ color: "white", marginBottom: "0px", marginTop: "1.5rem" }}
+        >
+          Your Tasks
+        </h1>
       </div>
       <div style={{ width: "75vw" }}>
         {createTaskInfo.show && (
@@ -337,11 +358,11 @@ const HomePage = () => {
           selectable={true}
           dateClick={handleDateSelect}
           eventClick={handleEventClick}
-          style={{marginTop: "40%"}}
+          style={{ marginTop: "40%" }}
         />
       </div>
     </div>
   );
 };
 
-export default HomePage;
+export default Calendar;

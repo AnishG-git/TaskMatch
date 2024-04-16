@@ -2,11 +2,10 @@ import { useState } from "react";
 
 // import { useLocation } from "wouter";
 import { useNavigate } from "react-router-dom";
-import CustomerSignUp from "../CustomerSignUp/CustomerSignUp";
-import Navbarp from "../Navbarp";
-import "./Landing2.css";
-import "../MainPage/index.css";
-export default function Landing2() {
+import Navbarp from "../Navbar/Navbarp";
+import "./Login.css";
+import "../../index.css";
+export default function Login() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -17,7 +16,7 @@ export default function Landing2() {
   };
 
   const go2Home = (userInfo) => {
-    navigate("/home", { state: { userInfo } });
+    navigate("/calendar", { state: { userInfo } });
   };
 
   const handleLogin = async () => {
@@ -42,7 +41,7 @@ export default function Landing2() {
       setLoginStatus("Login successful");
       console.log(JSON.stringify(result));
       if (result.is_contractor === "true") {
-        navigate("/ContractorHomePage", { state: { userInfo: result } });
+        navigate("/contractor", { state: { userInfo: result } });
       } else {
         go2Home(result);
       }
@@ -53,10 +52,10 @@ export default function Landing2() {
     <div className="container" id="landingPage">
       <Navbarp />
 
-      <h1 style={{color: "white"}}>
+      <h1 style={{ color: "white" }}>
         Welcome to <span>TaskMatch</span>
       </h1>
-      <p style={{color: "white"}}>Your All-in-One Task Management Solution</p>
+      <p style={{ color: "white" }}>Your All-in-One Task Management Solution</p>
       <form>
         <div className="form-group">
           <input
@@ -81,15 +80,20 @@ export default function Landing2() {
           className="back-btn"
           id="signInBtn"
           onClick={handleLogin}
-          style={{marginRight: "1rem"}}
+          style={{ marginRight: "1rem" }}
         >
           SIGN IN
         </button>
-        <button className="back-btn" id="signUpBtn" onClick={customerSignUp} style={{marginLeft: "1rem"}}>
+        <button
+          className="back-btn"
+          id="signUpBtn"
+          onClick={customerSignUp}
+          style={{ marginLeft: "1rem" }}
+        >
           SIGN UP
         </button>
       </div>
-      <p style={{color: "white"}}>{loginStatus}</p>
+      <p style={{ color: "white" }}>{loginStatus}</p>
     </div>
   );
 }

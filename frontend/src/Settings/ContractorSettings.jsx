@@ -28,7 +28,7 @@ function ContractorSettings() {
       alert(result.error);
       return;
     }
-    navigate("/ContractorHomePage", { state: { userInfo: result } });
+    navigate("/contractor", { state: { userInfo: result } });
   }
 
   const updateProfile = async () => {

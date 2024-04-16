@@ -1,8 +1,8 @@
 import styled from "styled-components";
 import React, { useState, useEffect } from "react"; // Import useEffect here
 import { useNavigate, useLocation } from "react-router-dom";
-import Navbarp from "./Navbarpo"; // Assuming Navbarp is correctly implemented
-import "./MainPage/index.css";
+import Navbarp from "../Navbar/Navbarpo"; // Assuming Navbarp is correctly implemented
+import "../../index.css";
 
 const PageContainer = styled.div`
   padding: 20px;
@@ -38,28 +38,14 @@ const TaskDetail = styled.div`
   margin-top: 5px;
 `;
 
-const ContractorHomePage = () => {
+const ContractorView = () => {
   const [selectedTask, setSelectedTask] = useState(null);
   const userInfo = useLocation().state.userInfo;
   const [tasks, setTasks] = useState(userInfo.tasks);
-  console.log(userInfo)
-
-  // useEffect(() => {
-  //     const fetchTasks = async () => {
-  //         // Simulated fetch request
-  //         const tasksData = [
-  //             { id: 1, title: "Kitchen Renovation", description: "Full kitchen makeover required" },
-  //             { id: 2, title: "Bathroom Plumbing", description: "Fix leaky sink and install new bathtub" },
-  //             { id: 3, title: "Outdoor Deck", description: "Build a 12x12 wooden deck" },
-  //         ];
-  //         setTasks(tasksData);
-  //     };
-  //     fetchTasks();
-  // }, []);
 
   return (
     <PageContainer>
-      <Navbarp userInfo={userInfo}/> {/* Including Navbar component */}
+      <Navbarp userInfo={userInfo} /> {/* Including Navbar component */}
       <Header>
         <h1>Contractor Task Dashboard</h1>
       </Header>
@@ -73,7 +59,9 @@ const ContractorHomePage = () => {
             fontSize: "30px",
           }}
         >
-          {"No customer requests... yet. Keep ya head up and get ya bread up :)"}
+          {
+            "No customer requests... yet. Keep ya head up and get ya bread up :)"
+          }
         </p>
       )}
       <TaskList>
@@ -88,11 +76,11 @@ const ContractorHomePage = () => {
           <h2>Details for: {selectedTask.name}</h2>
           <p>Description: {selectedTask.description}</p>
           <p>Date: {selectedTask.date}</p>
-          <p>Completed: {(selectedTask.is_completed == true) ? "Yes" : "No"}</p>
+          <p>Completed: {selectedTask.is_completed == true ? "Yes" : "No"}</p>
         </TaskDetail>
       )}
     </PageContainer>
   );
 };
 
-export default ContractorHomePage;
+export default ContractorView;
