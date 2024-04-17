@@ -7,7 +7,7 @@ Setup:
 3. make sure you are in the backend folder (cd backend)
 4. If you do not have virtualenv installed, type pip install virtualenv
 5. Type **virtualenv venv** to created virtual environment
-6. Activate virtual environment by typing **venv\Scripts\activate** for Windows, **venv\bin\activate** for Mac
+6. Activate virtual environment by typing **venv\Scripts\activate** for Windows, **source venv\bin\activate** for Mac
 7. Type **pip install -r requirements.txt** to install required dependencies to virtual environment
 8. Type **python manage.py makemigrations api** to package model changes in api directory locally
 9. Type **python manage.py migrate** to migrate changes
