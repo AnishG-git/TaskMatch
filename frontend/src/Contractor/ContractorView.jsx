@@ -5,7 +5,7 @@ import Navbarp from "../Navbar/Navbarpo"; // Assuming Navbarp is correctly imple
 import "../../index.css";
 
 const PageContainer = styled.div`
-  padding: 20px;
+  scrollbar-width: thin;
   font-family: Arial, sans-serif;
 `;
 
@@ -54,7 +54,9 @@ const ContractorView = () => {
           style={{
             position: "absolute",
             top: "50%",
-            right: "30%",
+            // right: "30%",
+            width: "100%",
+            textAlign: "center",
             color: "white",
             fontSize: "30px",
           }}
