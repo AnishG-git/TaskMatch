@@ -7,11 +7,12 @@ export default function ContractorSignUp() {
   const location = useLocation();
 
   const [userInfo, setUserInfo] = useState({
-    name: "",
+    company_name: "",
     email: "",
     password: "",
     zip_code: "",
     phone_number: "",
+    category: "",
   });
 
   const [signUpStatus, setSignUpStatus] = useState("");
@@ -48,7 +49,7 @@ export default function ContractorSignUp() {
   const back = () => {
     navigate(-1);
   };
-  
+
   return (
     <div className="container" id="signUpForm">
       <button
@@ -58,7 +59,7 @@ export default function ContractorSignUp() {
       >
         BACK
       </button>
-      <h2 className="signup-title" style={{color: "white"}}>
+      <h2 className="signup-title" style={{ color: "white" }}>
         Contractor Registration
       </h2>
       <div>
@@ -75,7 +76,7 @@ export default function ContractorSignUp() {
           placeholder="EMAIL"
           className="signup-field"
           onChange={(e) => setUserInfo({ ...userInfo, email: e.target.value })}
-          style={{margin: "1rem"}}
+          style={{ margin: "1rem" }}
         />
         <input
           type="password"
@@ -102,18 +103,50 @@ export default function ContractorSignUp() {
           onChange={(e) =>
             setUserInfo({ ...userInfo, phone_number: e.target.value })
           }
-          style={{margin: "1rem"}}
+          style={{ margin: "1rem" }}
         />
-        <input
+        {/* <input
           type="text"
           placeholder="CATEGORY"
           className="signup-field"
           onChange={(e) =>
             setUserInfo({ ...userInfo, category: e.target.value })
           }
-        />
+        /> */}
+        <select
+          style={{
+            width: "20%",
+            height: "40px",
+            fontSize: "15px",
+            borderRadius: "5px",
+            border: "1px solid white",
+            padding: "5px",
+            marginBottom: "20px",
+          }}
+          className="signup-field"
+          id="category"
+          defaultValue={"none"}
+          placeholder="CATEGORY"
+          onChange={(e) => {
+            userInfo.category === "none" || userInfo.category === ""
+              ? setUserInfo({ ...userInfo, category: e.target.value })
+              : {};
+          }}
+        >
+          <option value="none" disabled hidden style={{color: "gray"}}>
+            CATEGORY
+          </option>
+          <option value="Work">Work</option>
+          <option value="Personal">Personal</option>
+          <option value="Plumbing">Plumbing</option>
+          <option value="Other">Other</option>
+        </select>
       </div>
-      <button className="back-btn" style={{ margin: "1rem" }} onClick={handleSignUp}>
+      <button
+        className="back-btn"
+        style={{ margin: "1rem" }}
+        onClick={handleSignUp}
+      >
         SIGN UP
       </button>
       <p style={{ color: "white", margin: "1rem" }}>{signUpStatus}</p>

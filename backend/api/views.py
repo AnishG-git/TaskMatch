@@ -31,7 +31,7 @@ def register(request):
         return Response({"status": "Invalid zip code"}, status=status.HTTP_400_BAD_REQUEST)
     
     # If company name and category are provided, create a Contractor
-    if (company_name and category):
+    if (company_name):
         # Check if Contractor with provided email or phone number already exists
         if Contractor.objects.filter(email=email).exists():
             return Response({"status": "user already exists, email is not unique"}, status=status.HTTP_409_CONFLICT)
@@ -39,6 +39,8 @@ def register(request):
         if Contractor.objects.filter(phone_number=phone_number).exists():
             return Response({"status": "user already exists, phone number is not unique"}, status=status.HTTP_409_CONFLICT)
         
+        if category == "":
+            return Response({"status": "category cannot be empty"}, status=status.HTTP_400_BAD_REQUEST)
         # Create a new Contractor
         try:
             Contractor.objects.create_user(
@@ -54,7 +56,7 @@ def register(request):
         
         except Exception as e:
             # Handle exceptions if any while creating a new Contractor
-            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({"status": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
     else:
         # Check if Customer with provided email or phone number already exists
