@@ -157,10 +157,12 @@ const TaskRow = (props) => {
             onChange={handleChange}
           >
             <option value="none"></option>
-            <option value="Work">Work</option>
-            <option value="Personal">Personal</option>
+            <option value="HVAC">HVAC</option>
+            <option value="Electrical">Electrical</option>
             <option value="Plumbing">Plumbing</option>
-            <option value="Other">Other</option>
+            <option value="Construction">Construction</option>
+            <option value="Landscaping">Landscaping</option>
+            <option value="Miscellaneous">Miscellaneous</option>
           </select>
         ) : field !== "contractor" && field != "completed" ? (
           <input
@@ -206,8 +208,8 @@ const TaskRow = (props) => {
                 : selectedContractor.distance}
             </p>
             <p style={{ fontWeight: "500",color: "white" }}>
-              rating:{" "}
-              {!create ? extProps.contractor.rating : selectedContractor.rating}
+              rating:{" no ratings yet"}
+              {/* {!create ? extProps.contractor.rating : selectedContractor.rating} */}
             </p>
             {(create || modalInfo.editing) && (
               <>
@@ -274,7 +276,7 @@ const TaskRow = (props) => {
                                 <p style={{color: "white"}}>
                                   rating:{" "}
                                   {contractor.rating !== ""
-                                    ? contractor.rating + "/5.0"
+                                    ? " no ratings yet"
                                     : ""}
                                 </p>
                               </li>

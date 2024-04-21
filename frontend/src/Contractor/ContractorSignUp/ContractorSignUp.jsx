@@ -137,9 +137,12 @@ export default function ContractorSignUp() {
             CATEGORY
           </option>
           <option value="Work">Work</option>
-          <option value="Personal">Personal</option>
-          <option value="Plumbing">Plumbing</option>
-          <option value="Other">Other</option>
+          <option value="HVAC">HVAC</option>
+            <option value="Electrical">Electrical</option>
+            <option value="Plumbing">Plumbing</option>
+            <option value="Construction">Construction</option>
+            <option value="Landscaping">Landscaping</option>
+            <option value="Miscellaneous">Miscellaneous</option>
         </select>
       </div>
       <button

@@ -28,12 +28,12 @@ const Calendar = () => {
       start: task.date,
       backgroundColor:
         task.is_completed === "true" || task.is_completed === true
-          ? "#C04000"
-          : "#009E60",
+          ? "##009E60"
+          : "#C04000",
       borderColor:
         task.is_completed === "true" || task.is_completed === true
-          ? "#C04000"
-          : "#009E60",
+          ? "#009E60"
+          : "#C04000",
     }))
   );
 
@@ -46,12 +46,12 @@ const Calendar = () => {
         // if the task is completed, color it red
         backgroundColor:
           task.is_completed === "true" || task.is_completed === true
-            ? "#C04000"
-            : "#009E60",
+            ? "#009E60"
+            : "#C04000",
         borderColor:
           task.is_completed === "true" || task.is_completed === true
-            ? "#C04000"
-            : "#009E60",
+            ? "#009E60"
+            : "#C04000",
       }))
     );
   }
