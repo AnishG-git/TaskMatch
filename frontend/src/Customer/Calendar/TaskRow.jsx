@@ -23,7 +23,6 @@ const TaskRow = (props) => {
   });
   const [completed, setCompleted] = useState(() => {
     if (!create) {
-      console.log("is_completed: ", modalInfo.event.extendedProps.is_completed);
       return modalInfo.event.extendedProps.is_completed;
     }
     return false;
@@ -90,7 +89,6 @@ const TaskRow = (props) => {
   }
 
   function handleChange(e) {
-    console.log(e.target.value);
     props.setTask({ ...props.task, [field]: e.target.value });
   }
 

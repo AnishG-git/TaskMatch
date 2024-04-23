@@ -28,7 +28,7 @@ const Calendar = () => {
       start: task.date,
       backgroundColor:
         task.is_completed === "true" || task.is_completed === true
-          ? "##009E60"
+          ? "#009E60"
           : "#C04000",
       borderColor:
         task.is_completed === "true" || task.is_completed === true
@@ -72,8 +72,6 @@ const Calendar = () => {
     date: null,
   });
 
-  console.log(modalInfo.event);
-
   // task is the task that is being edited (contains information that has not been saved yet)
   const [task, setTask] = useState({});
 
@@ -82,10 +80,6 @@ const Calendar = () => {
   const [contractors, setContractors] = useState([]);
 
   const handleBackClick = (e) => {
-    console.log(
-      "on back click, modalInfo: " +
-        JSON.stringify(modalInfo.event.extendedProps)
-    );
     // hide create modal
     if (e.target.value === "true") {
       setCreateTaskInfo({ show: false, date: null });
@@ -137,13 +131,11 @@ const Calendar = () => {
   };
 
   useEffect(() => {
-    // console.log(tasks);
     if (modalInfo.show) {
       setModalInfo({ show: false, event: {}, editing: false });
     } else if (createTaskInfo.show) {
       setCreateTaskInfo({ show: false, date: null });
     } else {
-      console.log("setting contractors to empty");
       setContractors([]);
     }
   }, [tasks]);
@@ -151,11 +143,12 @@ const Calendar = () => {
   useEffect(() => {
     if (!modalInfo.show && !createTaskInfo.show) {
       setTask({});
+    } else {
+      setRadius(10);
     }
   }, [modalInfo.show, createTaskInfo.show]);
 
   const updateTask = async () => {
-    console.log("completed: " + task.completed);
     if (!task.category) {
       return { error: "Please fill in all fields" };
     }
@@ -176,7 +169,6 @@ const Calendar = () => {
       category: task.category,
     };
     if (task.completed !== "") {
-      console.log(task);
       body.is_completed = task.completed;
     } else {
       body.is_completed = modalInfo.event.extendedProps.is_completed;
@@ -198,7 +190,6 @@ const Calendar = () => {
   };
 
   const createTask = async () => {
-    // console.log("create task: " + JSON.stringify(task));
     // save task on frontend
     let contractorArg = "";
     let body = {
@@ -220,7 +211,6 @@ const Calendar = () => {
       body: JSON.stringify(body),
     });
     const result = await response.json();
-    console.log(result);
     return result;
   };
 
@@ -259,7 +249,6 @@ const Calendar = () => {
       }),
     });
     const result = await response.json();
-    console.log(result);
     return result;
   };
 
@@ -283,7 +272,6 @@ const Calendar = () => {
       }
     );
     const result = await response.json();
-    console.log(result);
     setContractors(result);
   };
 
