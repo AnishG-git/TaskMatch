@@ -84,7 +84,7 @@ const TaskRow = (props) => {
     if (isTitle) {
       return null;
     } else {
-      return <p style={{color: "white"}}>{defaultVal}</p>;
+      return <p style={{ color: "white" }}>{defaultVal}</p>;
     }
   }
 
@@ -119,25 +119,28 @@ const TaskRow = (props) => {
   }
 
   useEffect(() => {
-    console.log("completed: ", completed);
     props.setTask({ ...props.task, completed: completed });
   }, [completed]);
 
   return (
     <div>
-      {(field !== "completed") && (
+      {field !== "completed" && (
         <p style={{ fontWeight: "bold", marginBottom: "5px", color: "white" }}>
           {displayTitle()}
         </p>
       )}
-      {(field === "completed" && modalInfo.show && !modalInfo.editing) && (
+      {field === "completed" && modalInfo.show && !modalInfo.editing && (
         <>
-        <p style={{ fontWeight: "bold", marginBottom: "5px", color: "white" }}>
-          {fieldTitle}
-        </p>
-        <p style={{fontWeight: "500", color: "white"}}>{(completed) ? "Yes" : "No"}</p>
+          <p
+            style={{ fontWeight: "bold", marginBottom: "5px", color: "white" }}
+          >
+            {fieldTitle}
+          </p>
+          <p style={{ fontWeight: "500", color: "white" }}>
+            {completed ? "Yes" : "No"}
+          </p>
         </>
-        )}
+      )}
       {modalInfo.editing || create || field === "contractor" ? (
         field === "category" ? (
           <select
@@ -185,28 +188,31 @@ const TaskRow = (props) => {
           <>
             <p style={{ fontWeight: "500", color: "white" }}>
               name:{" "}
-              {!create
-                ? extProps.contractor.company_name
-                : selectedContractor.company_name}
+              {selectedContractor.distance !== ""
+                ? selectedContractor.company_name
+                : ""}
             </p>
             <p style={{ fontWeight: "500", color: "white" }}>
               email:{" "}
-              {!create ? extProps.contractor.email : selectedContractor.email}
+              {selectedContractor.distance !== ""
+                ? selectedContractor.email
+                : ""}
             </p>
             <p style={{ fontWeight: "500", color: "white" }}>
               phone:{" "}
-              {!create
-                ? extProps.contractor.phone_number
-                : selectedContractor.phone_number}
+              {selectedContractor.distance !== ""
+                ? selectedContractor.phone_number
+                : ""}
             </p>
             <p style={{ fontWeight: "500", color: "white" }}>
               distance:{" "}
-              {!create
-                ? extProps.contractor.distance
-                : selectedContractor.distance}
+              {selectedContractor.distance !== ""
+                ? selectedContractor.distance + " miles"
+                : ""}
             </p>
-            <p style={{ fontWeight: "500",color: "white" }}>
-              rating:{" no ratings yet"}
+            <p style={{ fontWeight: "500", color: "white" }}>
+              rating:{" "}
+              {selectedContractor.distance !== "" ? " no ratings yet" : ""}
               {/* {!create ? extProps.contractor.rating : selectedContractor.rating} */}
             </p>
             {(create || modalInfo.editing) && (
@@ -247,7 +253,9 @@ const TaskRow = (props) => {
                 {props.contractors === null ? (
                   <></>
                 ) : props.contractors.length === 0 ? (
-                  <p style={{ fontWeight: "500", color: "white" }}>No contractors found</p>
+                  <p style={{ fontWeight: "500", color: "white" }}>
+                    No contractors found
+                  </p>
                 ) : (
                   <>
                     <ul style={{ listStyleType: "none", marginTop: "3%" }}>
@@ -262,16 +270,22 @@ const TaskRow = (props) => {
                               }}
                             >
                               <li key={index} style={{ fontWeight: "500" }}>
-                                <p style={{color: "white"}}>name: {contractor.company_name}</p>
-                                <p style={{color: "white"}}>email: {contractor.email}</p>
-                                <p style={{color: "white"}}>phone: {contractor.phone_number}</p>
-                                <p style={{color: "white"}}>
+                                <p style={{ color: "white" }}>
+                                  name: {contractor.company_name}
+                                </p>
+                                <p style={{ color: "white" }}>
+                                  email: {contractor.email}
+                                </p>
+                                <p style={{ color: "white" }}>
+                                  phone: {contractor.phone_number}
+                                </p>
+                                <p style={{ color: "white" }}>
                                   distance:{" "}
                                   {contractor.distance !== ""
                                     ? contractor.distance + " miles"
                                     : ""}
                                 </p>
-                                <p style={{color: "white"}}>
+                                <p style={{ color: "white" }}>
                                   rating:{" "}
                                   {contractor.rating !== ""
                                     ? " no ratings yet"
@@ -332,7 +346,11 @@ const TaskRow = (props) => {
               marginTop: "5%",
             }}
           >
-            <p style={{ fontWeight: "700", marginBottom: "4px", color: "white" }}>Completed?</p>
+            <p
+              style={{ fontWeight: "700", marginBottom: "4px", color: "white" }}
+            >
+              Completed?
+            </p>
             <input
               type="checkbox"
               // value={completed}

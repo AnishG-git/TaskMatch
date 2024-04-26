@@ -344,6 +344,7 @@ def update_task(request):
 def get_info(request):
     user = request.user
     token = request.META.get('HTTP_AUTHORIZATION').split(' ')[1]
+    print(token)
     if hasattr(user, 'contractor'):
         contractor = Contractor.objects.get(id=user.id)
         tasks = Task.objects.filter(contractor=contractor)

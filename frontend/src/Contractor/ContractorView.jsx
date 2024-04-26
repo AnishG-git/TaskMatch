@@ -41,7 +41,20 @@ const TaskDetail = styled.div`
 const ContractorView = () => {
   const [selectedTask, setSelectedTask] = useState(null);
   const userInfo = useLocation().state.userInfo;
+  const token = userInfo.token;
   const [tasks, setTasks] = useState(userInfo.tasks);
+
+  const getTasks = async () => {
+    const response = await fetch("/api/get-info", {
+      method: "GET",
+      headers: {
+        Authorization: `Token ${token}`,
+      }
+    });
+    const data = await response.json();
+    alert("Updated tasks!");
+    setTasks(data.tasks);
+  }
 
   return (
     <PageContainer>
@@ -49,6 +62,9 @@ const ContractorView = () => {
       <Header>
         <h1>Contractor Task Dashboard</h1>
       </Header>
+      <button style={{position: "absolute", right: "1%", top: "7.7%"}} className="back-btn" onClick={getTasks}>
+        Refresh
+      </button>
       {tasks.length === 0 && (
         <p
           style={{
