@@ -108,7 +108,14 @@ def login(request):
         if hasattr(user, 'contractor'):
             contractor = Contractor.objects.get(id=user.id)
             tasks = Task.objects.filter(contractor=contractor)
-            tasks = TaskSerializer(tasks, many=True)
+            serialized_tasks = TaskSerializer(tasks, many=True)
+            serialized_tasks = serialized_tasks.data
+            for i in range(len(serialized_tasks)):
+                serialized_tasks[i]['customer_name'] = tasks[i].to_do_list.user.name
+                serialized_tasks[i]['customer_email'] = tasks[i].to_do_list.user.email
+                serialized_tasks[i]['customer_phone'] = tasks[i].to_do_list.user.phone_number
+                serialized_tasks[i]['customer_zip'] = tasks[i].to_do_list.user.zip_code
+
             userInfo = {
                 "id": user.id,
                 "email": contractor.email,
@@ -119,7 +126,7 @@ def login(request):
                 "rating": contractor.rating,
                 "token": token.key,
                 "is_contractor": "true",
-                "tasks": tasks.data
+                "tasks": serialized_tasks
             }
         else:
             customer = Customer.objects.get(id=user.id)
@@ -348,7 +355,13 @@ def get_info(request):
     if hasattr(user, 'contractor'):
         contractor = Contractor.objects.get(id=user.id)
         tasks = Task.objects.filter(contractor=contractor)
-        tasks = TaskSerializer(tasks, many=True)
+        serialized_tasks = TaskSerializer(tasks, many=True)
+        serialized_tasks = serialized_tasks.data
+        for i in range(len(serialized_tasks)):
+            serialized_tasks[i]['customer_name'] = tasks[i].to_do_list.user.name
+            serialized_tasks[i]['customer_email'] = tasks[i].to_do_list.user.email
+            serialized_tasks[i]['customer_phone'] = tasks[i].to_do_list.user.phone_number
+            serialized_tasks[i]['customer_zip'] = tasks[i].to_do_list.user.zip_code
         userInfo = {
             "id": user.id,
             "email": contractor.email,
@@ -359,7 +372,7 @@ def get_info(request):
             "rating": contractor.rating,
             "token": token,
             "is_contractor": "true",
-            "tasks": tasks.data
+            "tasks": serialized_tasks
         }
     else:
         customer = Customer.objects.get(id=user.id)

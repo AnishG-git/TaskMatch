@@ -32,6 +32,14 @@ function ContractorSettings() {
   }
 
   const updateProfile = async () => {
+    if (user.phone_number.length !== 10 || isNaN(user.phone_number)) {
+      alert("Phone number must be 10 digits, no dashes or extensions.");
+      return;
+    }
+    if (user.zip_code.length !== 5 || isNaN(user.zip_code)) {
+      alert("Zip code must be 5 digits and US based.");
+      return;
+    }
     const response = await fetch("/api/update-profile", {
       method: "PUT",
       headers: {
@@ -103,6 +111,7 @@ function ContractorSettings() {
           </label>
           <input
             type="text"
+            maxLength={5}
             id="name"
             placeholder="Enter your zip code"
             onChange={(e) => {
@@ -116,6 +125,7 @@ function ContractorSettings() {
             Phone Number
           </label>
           <input
+            maxLength={10}
             type="tel"
             id="phone"
             placeholder="Enter your phone number"
@@ -125,8 +135,9 @@ function ContractorSettings() {
             defaultValue={userInfo.phone_number}
           />
         </div>
+        <label style={{ color: "white", fontSize: "24px", fontWeight: "bold" }}>Category: {userInfo.category}</label>
         <div className="actions">
-          <button className="update-profile" onClick={updateProfile}>
+          <button className="back-btn" onClick={updateProfile}>
             Update Profile
           </button>
         </div>

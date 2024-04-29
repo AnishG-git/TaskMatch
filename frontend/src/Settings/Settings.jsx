@@ -27,6 +27,14 @@ function SettingsPage() {
   }
 
   const updateProfile = async () => {
+    if (user.phone_number.length !== 10 || isNaN(user.phone_number)) {
+      alert("Phone number must be 10 digits, no dashes or extensions.");
+      return;
+    }
+    if (user.zip_code.length !== 5 || isNaN(user.zip_code)) {
+      alert("Zip code must be 5 digits and US based.");
+      return;
+    }
     const response = await fetch("/api/update-profile", {
       method: "PUT",
       headers: {
@@ -96,6 +104,7 @@ function SettingsPage() {
           </label>
           <input
             type="text"
+            maxLength={5}
             id="zipcode"
             defaultValue={user.zip_code}
             onChange={(e) => {
@@ -111,6 +120,7 @@ function SettingsPage() {
           <input
             type="tel"
             id="phone"
+            maxLength={10}
             defaultValue={user.phone_number}
             onChange={(e) => {
               setUser({ ...user, phone_number: e.target.value });
