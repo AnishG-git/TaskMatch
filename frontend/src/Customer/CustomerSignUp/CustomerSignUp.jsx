@@ -26,6 +26,12 @@ export default function CustomerSignUp() {
     ) {
       setSignUpStatus("Please fill in all fields");
       return;
+    } else if (userInfo.phone_number.length !== 10 || isNaN(userInfo.phone_number)) {
+      setSignUpStatus("Phone number must be 10 digits, no dashes or extensions.");
+      return;
+    } else if (userInfo.zip_code.length !== 5 || isNaN(userInfo.zip_code)) {
+      setSignUpStatus("Zip code must be 5 digits and US based.");
+      return;
     }
     const response = await fetch("/api/register", {
       method: "POST",

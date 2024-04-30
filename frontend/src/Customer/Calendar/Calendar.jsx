@@ -298,7 +298,7 @@ const Calendar = () => {
         <h1
           style={{ color: "white", marginBottom: "0px", marginTop: "1.5rem" }}
         >
-          Your Tasks
+          {user.name.charAt(0).toUpperCase() + user.name.slice(1)}'s Calendar
         </h1>
       </div>
       <div style={{ width: "75vw" }}>
